@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             token: {
               // Seed Token
               colorPrimary: "#00b96b",
-              borderRadius: 2,
+              borderRadius: 8,
 
               // Alias Token
               colorBgContainer: "#ffff",

@@ -1,6 +1,7 @@
 import { Button, Space } from "antd";
 import React from "react";
 import { CompassOutlined, GroupOutlined } from "@ant-design/icons";
+import Link from "next/link";
 
 const DiscoverButton = () => {
   return (
@@ -35,7 +36,11 @@ const CreateButton = () => {
 };
 
 const LoginButton = () => {
-  return <Button shape="round">LOGIN</Button>;
+  return (
+    <Button shape="round">
+      <Link href={"/auth/signup"}>LOGIN</Link>
+    </Button>
+  );
 };
 
 const Header = () => {

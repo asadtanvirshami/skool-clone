@@ -10,36 +10,42 @@ import {
 
 type Props = {};
 
-const CommunitySection = (props: Props) => {
+const CommunityCard = () => {
   const { Meta } = Card;
+  return (
+    <Card
+      style={{ width: 300 }}
+      cover={
+        <img
+          alt="example"
+          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+        />
+      }
+      actions={[
+        <SettingOutlined key="setting" />,
+        <EditOutlined key="edit" />,
+        <EllipsisOutlined key="ellipsis" />,
+      ]}
+    >
+      <Meta
+        avatar={
+          <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+        }
+        title="Brotherhood "
+        description="This is the description"
+      />
+    </Card>
+  );
+};
+
+const CommunitySection = (props: Props) => {
   return (
     <React.Fragment>
       <Space className="w-[100%] flex justify-center">
         <Search size="large" width={500} spellCheck />
       </Space>
       <Space>
-        <Card
-          style={{ width: 300 }}
-          cover={
-            <img
-              alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-            />
-          }
-          actions={[
-            <SettingOutlined key="setting" />,
-            <EditOutlined key="edit" />,
-            <EllipsisOutlined key="ellipsis" />,
-          ]}
-        >
-          <Meta
-            avatar={
-              <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-            }
-            title="Brotherhood "
-            description="This is the description"
-          />
-        </Card>
+        <CommunityCard />
       </Space>
     </React.Fragment>
   );
