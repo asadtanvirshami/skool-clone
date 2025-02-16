@@ -1,29 +1,44 @@
 "use client";
 
-import React from "react";
-import { Button, Card, Input, notification } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Button, Card, Input, notification, Upload } from "antd";
+import {
+  LockOutlined,
+  PlusCircleOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import axios from "axios";
 import Link from "next/link";
+import { userApi } from "@/api/user/user-api.";
+import Image from "next/image";
 
 const SignUp = () => {
-  const [firstName, setFirstName] = React.useState("");
-  const [lastName, setLastName] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
 
+  // Handle Image Upload
+  const handleUpload = (info: any) => {
+    if (info.file != null) {
+      setProfileImage(info.file);
+    }
+  };
+
   const handleClick = async () => {
+    console.log(firstName, profileImage, email, password, lastName);
     setIsLoading(true);
 
-    if (!firstName || !lastName || !email || !password) {
+    if (!firstName || !lastName || !email || !password || !profileImage) {
       setIsLoading(false);
       return api.error({
         message: "Error",
-        description: "Please fill in all fields",
+        description: "Please fill in all fields and upload an image",
       });
     }
 
@@ -31,9 +46,46 @@ const SignUp = () => {
     if (!emailRegex.test(email)) {
       setIsLoading(false);
       return api.error({
-        message: "Invalid email",
-        description: "Please enter a valid email",
+        message: "Invalid Email",
+        description: "Please enter a valid email address",
       });
+    }
+
+    try {
+      // Create FormData
+      const formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("password", password);
+      formData.append("profileImage", profileImage);
+
+      // API Request
+      const response = await userApi.signup(
+        firstName,
+        lastName,
+        email,
+        password,
+        profileImage
+      );
+      if (response.status === 200) {
+        api.success({
+          message: "Sign Up Success",
+          description: "Successfully signed up",
+        });
+      } else {
+        setIsLoading(false);
+      }
+      setTimeout(() => {
+        router.push("/auth/signin");
+      }, 1500);
+    } catch (error: any) {
+      api.error({
+        message: "Sign Up Failed",
+        description: error.response?.data?.message || "An error occurred",
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -62,6 +114,24 @@ const SignUp = () => {
             <Card className="justify-center align-middle space-y-4">
               <h1 className="text-4xl font-bold">Sign Up</h1>
               <form className="space-y-4 w-[400px] mt-8">
+                <div className="flex justify-center">
+                  <Upload
+                    listType="picture-circle"
+                    maxCount={1}
+                    beforeUpload={() => false} // Prevent automatic upload
+                    onChange={handleUpload}
+                  >
+                    {profileImage && (
+                      <button
+                        style={{ border: 0, background: "none" }}
+                        type="button"
+                      >
+                        <PlusCircleOutlined />
+                        <div style={{ marginTop: 8 }}>Upload</div>
+                      </button>
+                    )}
+                  </Upload>
+                </div>
                 <div>
                   <label
                     htmlFor="firstName"

@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
-import { Button, Card, Input, notification } from "antd";
+import { Button, Card, Divider, Input, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
+import { userApi } from "@/api/user/user-api.";
+import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
 
 const SignIn = () => {
   const [email, setEmail] = React.useState("");
@@ -33,34 +35,34 @@ const SignIn = () => {
       });
     }
 
-    // try {
-    //   const auth_request = await authApi.login(email, password);
-    //   const response = await auth_request?.data;
-    //   if (response.message === "success") {
-    //     api.success({
-    //       message: "User Logged In",
-    //       description: "Successfully logged in",
-    //     });
-    //     setIsLoading(false);
-    //     console.log(response);
+    try {
+      const response = (await userApi.login(
+        email.toLowerCase(),
+        password
+      )) as unknown as {
+        data: { token: string; success: boolean; error: string };
+      };
 
-    //     const sessionData = response?.accessToken;
-    //     console.log(sessionData, "SESSIOJN DATA");
-
-    //     Cookies.set("token", sessionData, {
-    //       secure: true,
-    //       expires: 1,
-    //     });
-    //     router.push("/protected-route/dashboard");
-    //   }
-    // } catch (Error) {
-    //   api.error({
-    //     message: "Error",
-    //     description: "An error occured while logging in. Try logging in again",
-    //   });
-    //   console.log(Error);
-    //   setIsLoading(false);
-    // }
+      setIsLoading(false);
+      if (response?.data?.success === true) {
+        const token = response.data.token;
+        Cookies.set("token", token, { expires: 1 });
+        router.push("/");
+      } else {
+        setIsLoading(false);
+        return api.error({
+          message: "Error",
+          description: response?.data?.error,
+        });
+      }
+    } catch (error: { response: { data: { error: string } } }) {
+      setIsLoading(false);
+      console.error(error);
+      return api.error({
+        message: "Error",
+        description: error?.response?.data?.error || "Please try again.",
+      });
+    }
   };
 
   return (
@@ -140,8 +142,12 @@ const SignIn = () => {
                   loading={isLoading}
                   className="border bg-red-400 p-2 mt-4 rounded-lg"
                 >
-                  Sign Up
+                  Sign In
                 </Button>
+              </div>
+              <Divider>or</Divider>
+              <div className="flex justify-center">
+                <GoogleLogin onSuccess={null} onError={null} useOneTap />
               </div>
             </Card>
           </div>
