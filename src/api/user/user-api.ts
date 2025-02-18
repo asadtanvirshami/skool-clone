@@ -15,7 +15,7 @@ const userApi = {
       (process.env.NEXT_PUBLIC_API_URL as string) + "user/auth/signin",
       {
         Email: email,
-        Password:password,
+        Password: password,
       }
     );
   },
@@ -36,8 +36,7 @@ const userApi = {
       formData.append("image", profileImage); // Append image file
 
       const response = axios.post(
-        (process.env.NEXT_PUBLIC_API_URL as string) +
-          "user/auth/signup",
+        (process.env.NEXT_PUBLIC_API_URL as string) + "user/auth/signup",
         formData,
         {
           headers: {
@@ -58,10 +57,10 @@ const userApi = {
     }
   },
 
-  verfication: (tokenResponse: any) => {
+  google_signin: (tokenResponse: any) => {
     try {
       const response = axios.post(
-        process.env.NEXT_PUBLIC_API_URL as string,
+        (process.env.NEXT_PUBLIC_API_URL as string) + "user/auth/google-signin",
         {
           token: tokenResponse.credential,
         }
@@ -75,6 +74,47 @@ const userApi = {
         return error.response?.data; // Access the response property safely
       } else {
         // Handle unexpected errors
+        console.error("Unexpected Error:", error);
+        return { message: "An unexpected error occurred" };
+      }
+    }
+  },
+  account_recovery: (email: any) => {
+    try {
+      const response = axios.post(
+        (process.env.NEXT_PUBLIC_API_URL as string) +
+          "user/auth/account-recovery",
+        {
+          email: email,
+        }
+      );
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error Response:", error.response?.data);
+        return error.response?.data; // Access the response property safely
+      } else {
+        console.error("Unexpected Error:", error);
+        return { message: "An unexpected error occurred" };
+      }
+    }
+  },
+  
+  otp_verification: (otp: any) => {
+    try {
+      const response = axios.post(
+        (process.env.NEXT_PUBLIC_API_URL as string) +
+          "user/auth/otp-verification",
+        {
+          otp: otp,
+        }
+      );
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error Response:", error.response?.data);
+        return error.response?.data; // Access the response property safely
+      } else {
         console.error("Unexpected Error:", error);
         return { message: "An unexpected error occurred" };
       }

@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
-import { userApi } from "@/api/user/user-api.";
+import { userApi } from "@/api/user/user-api";
 import Image from "next/image";
 
 const SignUp = () => {
@@ -121,7 +121,7 @@ const SignUp = () => {
                     beforeUpload={() => false} // Prevent automatic upload
                     onChange={handleUpload}
                   >
-                    {profileImage && (
+                    {!profileImage && (
                       <button
                         style={{ border: 0, background: "none" }}
                         type="button"

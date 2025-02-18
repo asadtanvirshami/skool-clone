@@ -5,8 +5,8 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { userApi } from "@/api/user/user-api.";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
+import { userApi } from "@/api/user/user-api";
+import { GoogleLogin } from "@react-oauth/google";
 
 const SignIn = () => {
   const [email, setEmail] = React.useState("");
@@ -47,7 +47,7 @@ const SignIn = () => {
       if (response?.data?.success === true) {
         const token = response.data.token;
         Cookies.set("token", token, { expires: 1 });
-        router.push("/");
+        router.push("/otp");
       } else {
         setIsLoading(false);
         return api.error({
@@ -55,7 +55,7 @@ const SignIn = () => {
           description: response?.data?.error,
         });
       }
-    } catch (error: { response: { data: { error: string } } }) {
+    } catch (error: any) {
       setIsLoading(false);
       console.error(error);
       return api.error({
@@ -63,6 +63,29 @@ const SignIn = () => {
         description: error?.response?.data?.error || "Please try again.",
       });
     }
+  };
+
+  const handleSuccess = async (credentialResponse: any) => {
+    console.log(credentialResponse?.credential);
+    const request = await userApi.google_signin(credentialResponse);
+    console.log(request);
+
+    if (!request?.data?.error && request?.data?.success) {
+      Cookies.set("token", request?.data?.token, { expires: 1 });
+      api.success({
+        message: "Success",
+        description: "Google sign in successful.",
+      });
+      router.push("/dashboard");
+    }
+  };
+
+  const handleError = () => {
+    console.error("Login Failed");
+    return api.error({
+      message: "Error",
+      description: "Please try again.",
+    });
   };
 
   return (
@@ -127,12 +150,16 @@ const SignIn = () => {
                   />
                 </div>
               </form>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center mt-3">
                 <p>
                   If you don't have an account
                   <Link href="/auth/signup"> click here</Link>
                 </p>
-
+                <p>
+                  <Link href="/auth/recovery"> Forget password</Link>
+                </p>
+              </div>
+              <div className="flex justify-end items-center">
                 <Button
                   size="large"
                   onClick={(e) => {
@@ -147,7 +174,11 @@ const SignIn = () => {
               </div>
               <Divider>or</Divider>
               <div className="flex justify-center">
-                <GoogleLogin onSuccess={null} onError={null} useOneTap />
+                <GoogleLogin
+                  onSuccess={handleSuccess}
+                  onError={handleError}
+                  useOneTap
+                />
               </div>
             </Card>
           </div>
