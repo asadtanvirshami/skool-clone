@@ -1,3 +1,4 @@
+"use client";
 import { CompassOutlined, HeartFilled } from "@ant-design/icons";
 import { Button, Col, Row, Space } from "antd";
 import React from "react";

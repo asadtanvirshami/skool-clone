@@ -47,7 +47,7 @@ const SignIn = () => {
       if (response?.data?.success === true) {
         const token = response.data.token;
         Cookies.set("token", token, { expires: 1 });
-        router.push("/otp");
+        router.push("/protected-route/dashboard");
       } else {
         setIsLoading(false);
         return api.error({

@@ -1,12 +1,15 @@
 "use client";
 import React from "react";
-import { Space, Avatar, Card } from "antd";
+import { Space, Avatar, Card, Flex, Tag, Row, Skeleton } from "antd";
 import Search from "antd/es/input/Search";
 import {
   EditOutlined,
   EllipsisOutlined,
+  LoadingOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
+import { categoryApi } from "@/api/category/category-api";
+import { useQueries, useQuery } from "@tanstack/react-query";
 
 type Props = {};
 
@@ -38,16 +41,52 @@ const CommunityCard = () => {
   );
 };
 
-const CommunitySection = (props: Props) => {
+const CategoryTags = (data: any) => {
+  console.log(data);
+
   return (
     <React.Fragment>
-      <Space className="w-[100%] flex justify-center">
-        <Search size="large" width={500} spellCheck />
-      </Space>
-      <Space>
-        <CommunityCard />
-      </Space>
+      <Flex wrap>
+        {data.map((node: any) => {
+          return <Tag key={node.id}>{node.Name}</Tag>;
+        })}
+      </Flex>
     </React.Fragment>
+  );
+};
+
+const CommunitySection = (props: Props) => {
+  const [categories, setCategories] = React.useState([]);
+  // const { data, error, isLoading, isSuccess } = useQueries({
+  //   queryKey: ["categories", "projects"],
+  //   queryFn: async () => {
+  //     const [categoriesData] = await Promise.all([categoryApi.get()]);
+  //     return { categories: categoriesData.data };
+  //   },
+  // });
+
+  // React.useEffect(() => {
+  //   console.log(data);
+  //   if (isSuccess) {
+  //   }
+  // }, []);
+
+  return (
+    <div>
+      <div className="flex justify-center">
+        <div className=" flex justify-center space-y-3 w-[500px]">
+          <Search size="large" width={100} spellCheck />
+        </div>
+      </div>
+      <div className="flex justify-center">
+        <Row className="m-4">
+          {/* <CategoryTags categories={categories} /> */}
+        </Row>
+      </div>
+      <Row>
+        <CommunityCard />
+      </Row>
+    </div>
   );
 };
 
