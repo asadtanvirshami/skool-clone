@@ -170,7 +170,7 @@ const SignIn = () => {
                     handleClick();
                   }}
                   loading={isLoading}
-                  className="border bg-red-400 p-2 mt-4 rounded-lg"
+                  className="border p-2 mt-4 rounded-lg"
                 >
                   Sign In
                 </Button>

@@ -12,7 +12,6 @@ import {
 import type { GetProps } from "antd";
 import { useRouter } from "next/navigation";
 import { userApi } from "@/api/user/user-api";
-
 const { Title } = Typography;
 
 const SignIn = () => {
@@ -40,6 +39,7 @@ const SignIn = () => {
         description: "Please enter a valid email",
       });
     }
+    router.push("/auth/otp");
 
     try {
       const response = (await userApi.account_recovery(values.email)).data;
@@ -49,7 +49,7 @@ const SignIn = () => {
           message: "Success",
           description: response?.message,
         });
-        router.push("/auth/otp");
+        router.push(`/auth/otp/${response?.userId}`);
       } else {
         api.error({
           message: "Error",
@@ -58,7 +58,7 @@ const SignIn = () => {
       }
     } catch (error) {
       setIsLoading(false);
-      console.error(error)
+      console.error(error);
       return api.error({
         message: "Error",
         description: "Please try again",
