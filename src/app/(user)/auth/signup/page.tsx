@@ -68,7 +68,9 @@ const SignUp = () => {
         password,
         profileImage
       );
-      if (response.status === 200) {
+      console.log(response);
+
+      if (response?.data?.success) {
         api.success({
           message: "Sign Up Success",
           description: "Successfully signed up",

@@ -9,6 +9,7 @@ import CommunitySection from "./home/community-section";
 import { categoryApi } from "@/api/category/category-api";
 import HeroSection from "./home/hero-section";
 import { Row } from "antd";
+import { communityApi } from "@/api/community/community-api";
 
 const queryClient = new QueryClient();
 
@@ -17,6 +18,13 @@ async function prefetchData() {
     queryKey: ["categories"],
     queryFn: async () => {
       const response = await categoryApi.get();
+      return response.data; // Ensure correct response structure
+    },
+  });
+  await queryClient.prefetchQuery({
+    queryKey: ["communities"],
+    queryFn: async () => {
+      const response = await communityApi.get();
       return response.data; // Ensure correct response structure
     },
   });

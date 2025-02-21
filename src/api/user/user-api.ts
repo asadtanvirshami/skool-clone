@@ -24,7 +24,7 @@ const userApi = {
     lastName: string,
     email: string,
     password: string,
-    profileImage: File // Expecting a file input for the image
+    profile_picture: File // Expecting a file input for the image
   ) => {
     try {
       // Create FormData object to send both text fields and image file
@@ -33,10 +33,10 @@ const userApi = {
       formData.append("lastName", lastName);
       formData.append("email", email);
       formData.append("password", password);
-      formData.append("image", profileImage); // Append image file
+      formData.append("profile_picture", profile_picture); // Append image file
 
       const response = axios.post(
-        (process.env.NEXT_PUBLIC_API_URL as string) + "user/auth/signup",
+        (process.env.NEXT_PUBLIC_API_URL as string) + "user/signup",
         formData,
         {
           headers: {
@@ -67,13 +67,10 @@ const userApi = {
       );
       return response;
     } catch (error) {
-      // Check if the error is an AxiosError and type it accordingly
       if (axios.isAxiosError(error)) {
-        // Now TypeScript recognizes that error.response is valid
         console.error("Error Response:", error.response?.data);
-        return error.response?.data; // Access the response property safely
+        return error.response?.data;
       } else {
-        // Handle unexpected errors
         console.error("Unexpected Error:", error);
         return { message: "An unexpected error occurred" };
       }
@@ -99,7 +96,7 @@ const userApi = {
       }
     }
   },
-  
+
   otp_verification: (otp: any) => {
     try {
       const response = axios.post(

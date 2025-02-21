@@ -1,6 +1,15 @@
 "use client";
 import React from "react";
-import { Space, Avatar, Card, Flex, Tag, Row, Skeleton } from "antd";
+import {
+  Space,
+  Avatar,
+  Card,
+  Flex,
+  Tag,
+  Row,
+  Skeleton,
+  Typography,
+} from "antd";
 import Search from "antd/es/input/Search";
 import {
   EditOutlined,
@@ -10,45 +19,52 @@ import {
 } from "@ant-design/icons";
 import { categoryApi } from "@/api/category/category-api";
 import { useQueries, useQuery } from "@tanstack/react-query";
+import { communityApi } from "@/api/community/community-api";
 
 type Props = {};
 
-const CommunityCard = () => {
+const CommunityCard = ({ communities }: any) => {
+  console.log(communities);
+
   const { Meta } = Card;
   return (
-    <Card
-      style={{ width: 300 }}
-      cover={
-        <img
-          alt="example"
-          src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-        />
-      }
-      actions={[
-        <SettingOutlined key="setting" />,
-        <EditOutlined key="edit" />,
-        <EllipsisOutlined key="ellipsis" />,
-      ]}
-    >
-      <Meta
-        avatar={
-          <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
-        }
-        title="Brotherhood "
-        description="This is the description"
-      />
-    </Card>
+    <React.Fragment>
+      {communities.map((node: any) => {
+        return (
+          <Card
+            key={node?.id}
+            style={{ width: 300 }}
+            cover={
+              <img
+                alt="example"
+                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              />
+            }
+            actions={[
+              <Typography>{node?.members}</Typography>,
+              <EllipsisOutlined key="ellipsis" />,
+            ]}
+          >
+            <Meta
+              avatar={
+                <Avatar src="https://api.dicebear.com/7.x/miniavs/svg?seed=8" />
+              }
+              title={node?.name}
+              description={node?.about}
+            />
+          </Card>
+        );
+      })}
+    </React.Fragment>
   );
 };
 
-const CategoryTags = (data: any) => {
-  console.log(data);
-
+const CategoryTags = ({ categories }: any) => {
   return (
     <React.Fragment>
       <Flex wrap>
-        {data.map((node: any) => {
-          return <Tag key={node.id}>{node.Name}</Tag>;
+        {categories.map((node: any) => {
+          return <Tag key={node.id}>{node.name}</Tag>;
         })}
       </Flex>
     </React.Fragment>
@@ -56,20 +72,26 @@ const CategoryTags = (data: any) => {
 };
 
 const CommunitySection = (props: Props) => {
-  const [categories, setCategories] = React.useState([]);
-  // const { data, error, isLoading, isSuccess } = useQueries({
-  //   queryKey: ["categories", "projects"],
-  //   queryFn: async () => {
-  //     const [categoriesData] = await Promise.all([categoryApi.get()]);
-  //     return { categories: categoriesData.data };
-  //   },
-  // });
+  const queries = useQueries({
+    queries: [
+      {
+        queryKey: ["categories"],
+        queryFn: () => categoryApi.get(),
+      },
+      {
+        queryKey: ["communities"],
+        queryFn: () => communityApi.get(),
+      },
+    ],
+  });
 
-  // React.useEffect(() => {
-  //   console.log(data);
-  //   if (isSuccess) {
-  //   }
-  // }, []);
+  const [categoriesQuery, communitiesQuery] = queries;
+  const [categories, setCategories] = React.useState(
+    categoriesQuery?.data || []
+  );
+  const [communities, setCommunities] = React.useState(
+    communitiesQuery?.data || []
+  );
 
   return (
     <div>
@@ -80,11 +102,11 @@ const CommunitySection = (props: Props) => {
       </div>
       <div className="flex justify-center">
         <Row className="m-4">
-          {/* <CategoryTags categories={categories} /> */}
+          <CategoryTags categories={categories} />
         </Row>
       </div>
       <Row>
-        <CommunityCard />
+        <CommunityCard communities={communities} />
       </Row>
     </div>
   );

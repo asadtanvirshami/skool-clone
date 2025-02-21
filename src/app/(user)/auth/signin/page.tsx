@@ -66,12 +66,15 @@ const SignIn = () => {
   };
 
   const handleSuccess = async (credentialResponse: any) => {
-    console.log(credentialResponse?.credential);
     const request = await userApi.google_signin(credentialResponse);
-    console.log(request);
 
     if (!request?.data?.error && request?.data?.success) {
-      Cookies.set("token", request?.data?.token, { expires: 1 });
+      const token = request?.data?.token;
+      Cookies.set("token", token, {
+        expires: 1,
+        secure: true,
+        sameSite: "Strict",
+      });
       api.success({
         message: "Success",
         description: "Google sign in successful.",
