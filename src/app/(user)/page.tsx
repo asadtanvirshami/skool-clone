@@ -8,17 +8,19 @@ import { redirect } from "next/navigation";
 import { categoryApi } from "@/api/category/category-api";
 import HeroSection from "./home/hero-section";
 import { Row } from "antd";
+import StickyNotesGrid from "./protected-route/dashboard/widgets/sticky-notes/sticky-note-grid";
+import Dashboard from "./protected-route/dashboard/dashboard";
 
 const queryClient = new QueryClient();
 
 async function prefetchData() {
-  await queryClient.prefetchQuery({
-    queryKey: ["categories"],
-    queryFn: async () => {
-      const response = await categoryApi.get();
-      return response.data; // Ensure correct response structure
-    },
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: ["categories"],
+  //   queryFn: async () => {
+  //     const response = await categoryApi.get();
+  //     return response.data; // Ensure correct response structure
+  //   },
+  // });
   // await queryClient.prefetchQuery({
   //   queryKey: ["communities"],
   //   queryFn: async () => {
@@ -35,8 +37,7 @@ async function Home() {
     <div className="w-full h-full  container">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <React.Fragment>
-          <HeroSection />
-          <Row className="w-full flex justify-center min-h-screen pb-20 sm:p-20 font-[family-name:var(--font-geist-sans)]"></Row>
+          <Dashboard/>
         </React.Fragment>
       </HydrationBoundary>
     </div>

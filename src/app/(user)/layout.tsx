@@ -1,3 +1,4 @@
+// Layout.jsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -11,8 +12,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem("theme") || "dark";
-    if (theme) setTheme(currentTheme);
+    const currentTheme = localStorage.getItem("theme") || "light";
+    setTheme(currentTheme);
     document.documentElement.setAttribute("data-theme", currentTheme);
   }, []);
 
@@ -22,6 +23,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     localStorage.setItem("theme", newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
   };
+
   return (
     <App>
       <AntdRegistry>
@@ -32,11 +34,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <ConfigProvider
               theme={{
                 token: {
-                  colorBgLayout: theme === "dark" ? "#181818" : "#ffffff",
-                  colorPrimary: theme === "dark" ? "#ffffff" : "#000000",
+                  colorBgLayout: "var(--background)",
+                  colorPrimary: "var(--foreground)",
                   borderRadius: 8,
-                  colorBgContainer: theme === "dark" ? "#181818" : "#ffffff",
-                  colorText: theme === "dark" ? "#ffffff" : "#000000",
+                  colorBgContainer: "var(--background)",
+                  colorText: "var(--foreground)",
                 },
               }}
             >

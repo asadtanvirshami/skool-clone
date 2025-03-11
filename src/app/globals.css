@@ -1,3 +1,4 @@
+/* input.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,29 +10,48 @@
   --accent: #eceff4;
 }
 
+/* Ensure all text elements inherit the correct color */
 [data-theme="dark"] {
   --background: #181818;
   --foreground: #ffffff;
-  --muted: #242424;
+  --muted: #b3b3b3;
   --accent: #333333;
 }
 
-/* Apply to body */
+[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #000000;
+  --muted: #2b2a2a;
+  --accent: #eceff4;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+  color: var(--foreground);
+}
+
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Prevent vertical scrolling */
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+}
+
 body {
   background-color: var(--background);
   color: var(--foreground);
-}
-
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #ffff;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Prevent vertical scrolling */
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
 }

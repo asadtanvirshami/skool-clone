@@ -1,6 +1,7 @@
 import { Button, Space } from "antd";
 import React from "react";
 import { CompassOutlined, GroupOutlined } from "@ant-design/icons";
+import moment from "moment";
 import Link from "next/link";
 
 const DiscoverButton = () => {
@@ -16,22 +17,12 @@ const DiscoverButton = () => {
   );
 };
 
-const BrandLogo = () => {
-  return <h1 className="font-semibold text-xl">BuildYou</h1>;
+const Date = () => {
+  return <h1 className="font-semibold text-xl">{moment().format("dddd MMMM YYYY")}</h1>;
 };
 
-const CreateButton = () => {
-  return (
-    <Button
-      variant="dashed"
-      color="blue"
-      shape="round"
-      iconPosition="end"
-      icon={<GroupOutlined />}
-    >
-      Create Community
-    </Button>
-  );
+const BrandLogo = () => {
+  return <h1 className="font-semibold text-xl">BuildYou</h1>;
 };
 
 const LoginButton = () => {
@@ -45,13 +36,15 @@ const LoginButton = () => {
 const Header = () => {
   return (
     <>
-      <div className="bg-white p-2 flex justify-evenly border-b-1 border-b-gray-300">
+      <div className=" p-2 flex justify-evenly border-b-[0.5px]  border-b-gray-600">
         <Space>
           <BrandLogo />
         </Space>
         <Space>
+          <Date />
+        </Space>
+        <Space>
           <DiscoverButton />
-          <CreateButton />
           <LoginButton />
         </Space>
       </div>
