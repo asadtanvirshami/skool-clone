@@ -135,10 +135,7 @@ const SignUp = () => {
                   </Upload>
                 </div>
                 <div>
-                  <label
-                    htmlFor="firstName"
-                    className="block text-gray-700 font-medium"
-                  >
+                  <label htmlFor="firstName" className="block font-medium">
                     First Name
                   </label>
                   <Input
@@ -151,10 +148,7 @@ const SignUp = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="lastName"
-                    className="block text-gray-700 font-medium"
-                  >
+                  <label htmlFor="lastName" className="block font-medium">
                     Last Name
                   </label>
                   <Input
@@ -167,10 +161,7 @@ const SignUp = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-gray-700 font-medium"
-                  >
+                  <label htmlFor="email" className="block font-medium">
                     Email
                   </label>
                   <Input
@@ -184,10 +175,7 @@ const SignUp = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-gray-700 font-medium"
-                  >
+                  <label htmlFor="password" className="block font-medium">
                     Password
                   </label>
                   <Input

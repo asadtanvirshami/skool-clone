@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { App, ConfigProvider } from "antd";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import MainLayout from "@/components/ui/main-layout";
@@ -8,6 +8,20 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactQueryClientProvider from "@/provider/react-query/react-provider";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const currentTheme = localStorage.getItem("theme") || "dark";
+    if (theme) setTheme(currentTheme);
+    document.documentElement.setAttribute("data-theme", currentTheme);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
   return (
     <App>
       <AntdRegistry>
@@ -18,12 +32,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <ConfigProvider
               theme={{
                 token: {
-                  // Seed Token
-                  colorPrimary: "#00b96b",
+                  colorBgLayout: theme === "dark" ? "#181818" : "#ffffff",
+                  colorPrimary: theme === "dark" ? "#ffffff" : "#000000",
                   borderRadius: 8,
-
-                  // Alias Token
-                  colorBgContainer: "#ffff",
+                  colorBgContainer: theme === "dark" ? "#181818" : "#ffffff",
+                  colorText: theme === "dark" ? "#ffffff" : "#000000",
                 },
               }}
             >

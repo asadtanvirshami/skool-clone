@@ -121,7 +121,7 @@ const SignIn = () => {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block text-gray-700 font-medium"
+                    className="block font-medium"
                   >
                     Email
                   </label>
@@ -138,7 +138,7 @@ const SignIn = () => {
                 <div>
                   <label
                     htmlFor="password"
-                    className="block text-gray-700 font-medium"
+                    className="block font-medium"
                   >
                     Password
                   </label>

@@ -7,7 +7,6 @@ const DiscoverButton = () => {
   return (
     <Button
       variant="solid"
-      color="green"
       shape="round"
       iconPosition="end"
       icon={<CompassOutlined />}
@@ -18,7 +17,7 @@ const DiscoverButton = () => {
 };
 
 const BrandLogo = () => {
-  return <h1 className="font-semibold text-xl">CommunityYou</h1>;
+  return <h1 className="font-semibold text-xl">BuildYou</h1>;
 };
 
 const CreateButton = () => {
@@ -46,7 +45,7 @@ const LoginButton = () => {
 const Header = () => {
   return (
     <>
-      <div className="bg-white p-2 flex justify-evenly">
+      <div className="bg-white p-2 flex justify-evenly border-b-1 border-b-gray-300">
         <Space>
           <BrandLogo />
         </Space>

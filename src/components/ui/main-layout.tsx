@@ -21,9 +21,9 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       {isAuthPath && <div>{children}</div>}
 
       {!isAuthPath && (
-        <Layout>
+        <Layout >
           <Header />
-          <Content>{children}</Content>
+          <Content className="text-foreground">{children}</Content>
           <Footer style={{ textAlign: "center" }}>
             CommunityYou ©{new Date().getFullYear()} Created by ALGORIM
           </Footer>

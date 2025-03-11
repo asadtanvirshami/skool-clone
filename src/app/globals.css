@@ -4,8 +4,24 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #ffff;
+  --foreground: #000000;
+  --muted: #2b2a2a;
+  --accent: #eceff4;
 }
+
+[data-theme="dark"] {
+  --background: #181818;
+  --foreground: #ffffff;
+  --muted: #242424;
+  --accent: #333333;
+}
+
+/* Apply to body */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
 
 @media (prefers-color-scheme: dark) {
   :root {
