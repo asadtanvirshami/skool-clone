@@ -24,22 +24,33 @@
   --muted: #2b2a2a;
   --accent: #eceff4;
 }
-.ant-menu-item:hover {
-  background-color: white !important;
-  color: #4fafe7 !important;
+
+/* Sider Navlinks light theme  */
+[data-theme="light"] .ant-menu-item:hover {
+  background-color: #2b2a2a !important;
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-title-content:hover {
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-title-content:active {
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-item-selected span {
+  background-color: none !important;
+  color: white !important;
+}
+[data-theme="dark"] .ant-menu-item-selected span {
+  background-color: none !important;
+  color: white !important;
 }
 .ant-menu-item:active {
-  background-color: white !important;
-  color: #4fafe7 !important;
+  background-color: none !important;
+  color: white !important;
 }
-
 .ant-menu-item:focus {
-  background-color: white !important;
-  color: #4fafe7 !important;
-}
-
-.ant-menu-item-selected {
-  background-color: #4fafe7 !important;
+  background-color: none !important;
+  color: white !important;
 }
 
 h1,

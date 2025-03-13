@@ -1,36 +1,47 @@
 "use client";
 import React, { useState } from "react";
 import { Button, Layout, Menu, theme as antdTheme } from "antd";
-import Header from "./header";
 import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  MenuFoldOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
+  UserRound,
+  NotebookText,
+  ListTodo,
+  CalendarDays,
+  BookDashed,
+  Award,
+  StickyNote,
+  Goal,
+  Rocket,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
+
+import Header from "./header";
+
 import type { MenuProps } from "antd";
 import { usePathname } from "next/navigation";
 
 const { Content, Sider } = Layout;
 
-const items: MenuProps["items"] = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
+const menuItems: { key: string; icon: any; label: string }[] = [
+  { key: "1", icon: UserRound, label: "Profile" },
+  { key: "2", icon: NotebookText, label: "Notes" },
+  { key: "3", icon: ListTodo, label: "Tasks" },
+  { key: "4", icon: CalendarDays, label: "Calendar" },
+  { key: "5", icon: BookDashed, label: "Library" },
+  { key: "6", icon: Award, label: "Achievements" },
+  { key: "7", icon: StickyNote, label: "Sticky Notes" },
+  { key: "8", icon: Goal, label: "Goal" },
+  { key: "9", icon: Rocket, label: "Skills" },
+];
+
+const items: MenuProps["items"] = menuItems.map(({ key, icon, label }) => ({
+  key,
+  icon: (
+    <span className="flex items-center justify-center text-sm">
+      {React.createElement(icon, { size: 18 })}
+    </span>
+  ),
+  label,
 }));
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
@@ -68,7 +79,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             <Header>
               <Button
                 type="text"
-                icon={<MenuFoldOutlined />}
+                icon={collapsed ? <ChevronsRight /> : <ChevronsLeft />}
                 onClick={() => setCollapsed(!collapsed)}
                 style={{
                   fontSize: "16px",
