@@ -119,7 +119,7 @@ const StickyNotesGrid = () => {
   return (
     <div
       ref={gridRef}
-      className="p-4 h-screen relative border border-gray-300"
+      className="p-4 h-screen relative "
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >

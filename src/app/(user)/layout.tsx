@@ -9,10 +9,10 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactQueryClientProvider from "@/provider/react-query/react-provider";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState("light");
+  const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem("theme") || "light";
+    const currentTheme = localStorage.getItem("theme") || "dark";
     setTheme(currentTheme);
     document.documentElement.setAttribute("data-theme", currentTheme);
   }, []);
@@ -33,12 +33,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <ConfigProvider
               theme={{
+                
                 token: {
                   colorBgLayout: "var(--background)",
                   colorPrimary: "var(--foreground)",
                   borderRadius: 8,
                   colorBgContainer: "var(--background)",
                   colorText: "var(--foreground)",
+                  colorBgElevated:"#fff"
+                  
                 },
               }}
             >

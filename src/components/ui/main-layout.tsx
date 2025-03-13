@@ -1,11 +1,12 @@
 "use client";
-import React from "react";
-import { Layout, Menu, theme } from "antd";
+import React, { useState } from "react";
+import { Button, Layout, Menu, theme as antdTheme } from "antd";
 import Header from "./header";
 import {
   AppstoreOutlined,
   BarChartOutlined,
   CloudOutlined,
+  MenuFoldOutlined,
   ShopOutlined,
   TeamOutlined,
   UploadOutlined,
@@ -15,18 +16,7 @@ import {
 import type { MenuProps } from "antd";
 import { usePathname } from "next/navigation";
 
-const { Content, Footer, Sider } = Layout;
-
-const siderStyle: React.CSSProperties = {
-  overflow: "auto",
-  height: "100vh",
-  position: "sticky",
-  insetInlineStart: 0,
-  top: 0,
-  bottom: 0,
-  scrollbarWidth: "thin",
-  scrollbarGutter: "stable",
-};
+const { Content, Sider } = Layout;
 
 const items: MenuProps["items"] = [
   UserOutlined,
@@ -43,33 +33,51 @@ const items: MenuProps["items"] = [
   label: `nav ${index + 1}`,
 }));
 
-
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const {} = theme.useToken();
+  const { token } = antdTheme.useToken(); // Get theme token
   const path = usePathname();
-
+  const [collapsed, setCollapsed] = useState(false);
   const isAuthPath = path.startsWith("/auth");
+
+  // Determine theme mode (dark/light)
+  const isDarkMode = token.colorBgBase === "#000"; // Example way to check
+
   return (
     <React.Fragment>
       {isAuthPath && <div>{children}</div>}
 
       {!isAuthPath && (
-        <Layout hasSider>
+        <Layout>
+          <Sider
+            className={collapsed ? "shadow-md" : "shadow-lg"}
+            theme={isDarkMode ? "dark" : "light"} // Apply theme dynamically
+            trigger={null}
+            collapsible
+            collapsed={collapsed}
+          >
+            <div className="demo-logo-vertical" />
+            <Menu
+              style={{ border: "none" }}
+              theme={isDarkMode ? "dark" : "light"} // Apply theme to menu
+              mode="inline"
+              defaultSelectedKeys={["4"]}
+              items={items}
+            />
+          </Sider>
           <Layout>
-            <Sider style={siderStyle}>
-              <div className="demo-logo-vertical" />
-              <Menu
-                theme="dark"
-                mode="inline"
-                defaultSelectedKeys={["4"]}
-                items={items}
+            <Header>
+              <Button
+                type="text"
+                icon={<MenuFoldOutlined />}
+                onClick={() => setCollapsed(!collapsed)}
+                style={{
+                  fontSize: "16px",
+                  width: 44,
+                  height: 44,
+                }}
               />
-            </Sider>
-            <Header />
+            </Header>
             <Content className="text-foreground">{children}</Content>
-            <Footer style={{ textAlign: "center" }}>
-              CommunityYou ©{new Date().getFullYear()} Created by ALGORIM
-            </Footer>
           </Layout>
         </Layout>
       )}

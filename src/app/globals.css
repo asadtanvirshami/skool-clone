@@ -24,6 +24,23 @@
   --muted: #2b2a2a;
   --accent: #eceff4;
 }
+.ant-menu-item:hover {
+  background-color: white !important;
+  color: #4fafe7 !important;
+}
+.ant-menu-item:active {
+  background-color: white !important;
+  color: #4fafe7 !important;
+}
+
+.ant-menu-item:focus {
+  background-color: white !important;
+  color: #4fafe7 !important;
+}
+
+.ant-menu-item-selected {
+  background-color: #4fafe7 !important;
+}
 
 h1,
 h2,
