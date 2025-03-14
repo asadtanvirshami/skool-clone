@@ -97,32 +97,32 @@ const SignIn = () => {
 
       <div
         data-cy="main-grid"
-        className="grid items-center justify-center h-screen w-full"
+        className="grid items-center justify-center h-screen w-full font-[family-name:var(--font-gantari)] "
       >
         <div className="lg:grid bg-gradient-to-r lg:grid-cols-2 xl:grid xl:grid-cols-3 md:grid grid-cols-2 w-screen">
-          <div className="hidden sm:flex h-screen align-middle bg-green-300 justify-center items-center xl:col-span-2">
+          <div className="hidden sm:flex h-screen align-middle justify-center items-center xl:col-span-2">
             <div className="justify-center align-middle items-center">
-              <h1 className="mx-auto text-[13rem] font-semibold font-[family-name:var(--font-geist-sans)] text-white">
-                CYOU
+              <h1 className="mx-auto text-[13rem] font-bold ">
+                BuildYou
               </h1>
               <div className="w-full flex justify-center">
-                <small className="text-xl text-white">
-                  Community You! You can build to support your community.
+                <small className="text-xl">
+                  Excel at every stage &amp; build the life
                 </small>
               </div>
             </div>
           </div>
-          <div className="flex h-screen align-middle justify-center font-[family-name:var(--font-redhat)] items-center border-silver-500 shadow-lg">
-            <Card className="justify-center align-middle space-y-4 ">
+          <div className="flex h-screen align-middle justify-center items-center border-silver-500 shadow-lg">
+            <Card
+              variant="outlined"
+              className="justify-center align-middle space-y-4"
+            >
               <div>
-                <h1 className="text-4xl font-bold ">Sign In</h1>
+                <h1 className="text-4xl font-bold font-[family-name:var(--font-gantari)] ">Sign In</h1>
               </div>
-              <form className="space-y-4 w-[400px] mt-8">
+              <form className="space-y-4 w-[400px] mt-8 font-[family-name:var(--font-gantari)] ">
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block font-medium"
-                  >
+                  <label htmlFor="email" className="block font-medium">
                     Email
                   </label>
                   <Input
@@ -136,10 +136,7 @@ const SignIn = () => {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block font-medium"
-                  >
+                  <label htmlFor="password" className="block font-medium">
                     Password
                   </label>
                   <Input
@@ -153,9 +150,9 @@ const SignIn = () => {
                   />
                 </div>
               </form>
-              <div className="flex justify-between items-center mt-3">
+              <div className="flex justify-between items-center mt-3 font-[family-name:var(--font-gantari)] ">
                 <p>
-                  If you don't have an account
+                  If you don&apos;t have an account
                   <Link href="/auth/signup"> click here</Link>
                 </p>
                 <p>

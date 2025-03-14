@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState("dark");
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem("theme") || "dark";
+    const currentTheme = localStorage.getItem("theme") || "light";
     setTheme(currentTheme);
     document.documentElement.setAttribute("data-theme", currentTheme);
   }, []);

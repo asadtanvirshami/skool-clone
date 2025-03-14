@@ -1,14 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Gantari } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+const celliad = localFont({
+  src: "./fonts/Celliad.woff",
+  weight: "100 900",
+  variable: "--font-celliad",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const excali = localFont({
+  src: "./fonts/Virgil.woff2",
+  weight: "100 900",
+  variable: "--font-excali",
+});
+
+const gantari = Gantari({
+  variable: "--font-gantari",
   subsets: ["latin"],
 });
 
@@ -25,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${gantari.variable} ${excali.variable} ${celliad.variable} antialiased`}
       >
         {children}
       </body>

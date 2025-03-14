@@ -117,94 +117,96 @@ const StickyNotesGrid = () => {
   };
 
   return (
-    <div
-      ref={gridRef}
-      className="p-4 h-screen relative "
-      onDragOver={handleDragOver}
-      onDrop={handleDrop}
-    >
+    <React.Fragment>
+      {" "}
       <button
         onClick={addNote}
         className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg shadow-md mb-4"
       >
         Add Note +
       </button>
-
-      {hoveredGrid && (
-        <div
-          style={{
-            position: "absolute",
-            left: hoveredGrid.x,
-            top: hoveredGrid.y,
-            width: GRID_SIZE,
-            height: GRID_SIZE,
-            borderRadius: "8px",
-            border: "2px dashed rgba(255, 215, 0, 0.7)",
-            background: "rgba(255, 215, 0, 0.2)",
-          }}
-          className="transition-all duration-200"
-        />
-      )}
-
-      {notes.map((note) => {
-        const { width, height } = NOTE_SIZES[note.size];
-
-        return (
+      <div
+        ref={gridRef}
+        className="p-4 h-[400px] overflow-hidden relative border border-w-1 rounded-lg"
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        {hoveredGrid && (
           <div
-            key={note.id}
-            draggable
-            onDragStart={(e) => handleDragStart(e, note.id)}
             style={{
               position: "absolute",
-              left: note.x,
-              top: note.y,
-              width,
-              height,
-              backgroundColor: note.color,
+              left: hoveredGrid.x,
+              top: hoveredGrid.y,
+              width: GRID_SIZE,
+              height: GRID_SIZE,
+              borderRadius: "8px",
+              border: "2px dashed rgba(255, 215, 0, 0.7)",
+              background: "rgba(255, 215, 0, 0.2)",
             }}
-            className="p-4 rounded-lg shadow-md flex flex-col cursor-move transition-all"
-          >
-            <textarea
-              value={note.content}
-              onChange={(e) => {
-                setNotes((prevNotes) =>
-                  prevNotes.map((n) =>
-                    n.id === note.id ? { ...n, content: e.target.value } : n
-                  )
-                );
+            className="transition-all duration-200"
+          />
+        )}
+
+        {notes.map((note) => {
+          const { width, height } = NOTE_SIZES[note.size];
+
+          return (
+            <div
+              key={note.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, note.id)}
+              style={{
+                position: "absolute",
+                left: note.x,
+                top: note.y,
+                width,
+                height,
+                backgroundColor: note.color,
               }}
-              className="flex-grow bg-transparent border-none resize-none focus:outline-none text-black"
-            />
-
-            {/* Color Picker */}
-            <input
-              type="color"
-              value={note.color}
-              onChange={(e) => handleColorChange(note.id, e.target.value)}
-              className="w-full cursor-pointer"
-            />
-
-            {/* Size Selector */}
-            <select
-              value={note.size}
-              onChange={(e) => handleSizeChange(note.id, e.target.value)}
-              className="w-min mt-1 p-1 bg-white border border-gray-300 rounded cursor-pointer"
+              className="p-4 rounded-lg shadow-md flex flex-col cursor-move transition-all "
             >
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
-            </select>
+              <textarea
+                value={note.content}
+                onChange={(e) => {
+                  setNotes((prevNotes) =>
+                    prevNotes.map((n) =>
+                      n.id === note.id ? { ...n, content: e.target.value } : n
+                    )
+                  );
+                }}
+                className="flex-grow bg-transparent border-none resize-none font-[family-name:var(--font-excali)] focus:outline-none text-black"
+              />
 
-            <button
-              onClick={() => deleteNote(note.id)}
-              className="self-end text-gray-600 hover:text-gray-800"
-            >
-              ×
-            </button>
-          </div>
-        );
-      })}
-    </div>
+              {/* Color Picker */}
+              <input
+                type="color"
+                value={note.color}
+                onChange={(e) => handleColorChange(note.id, e.target.value)}
+                className="w-full cursor-pointer"
+              />
+
+              {/* Size Selector */}
+              <select
+                value={note.size}
+                onChange={(e) => handleSizeChange(note.id, e.target.value)}
+                className="w-min mt-1 p-1 bg-white border border-gray-300 rounded cursor-pointer"
+              >
+                <option value="small">Small</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large</option>
+              </select>
+
+              <button
+                onClick={() => deleteNote(note.id)}
+                className="self-end text-gray-600 hover:text-gray-800"
+              >
+                ×
+              </button>
+            </div>
+          );
+        })}
+      </div>
+    </React.Fragment>
   );
 };
 

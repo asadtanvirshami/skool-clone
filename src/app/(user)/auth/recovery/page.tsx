@@ -75,23 +75,23 @@ const SignIn = () => {
         className="grid items-center justify-center h-screen w-full"
       >
         <div className="lg:grid bg-gradient-to-r lg:grid-cols-2 xl:grid xl:grid-cols-3 md:grid grid-cols-2 w-screen">
-          <div className="hidden sm:flex h-screen align-middle bg-green-300 justify-center items-center xl:col-span-2">
+          <div className="hidden sm:flex h-screen align-middle justify-center items-center xl:col-span-2">
             <div className="justify-center align-middle items-center">
-              <h1 className="mx-auto text-[13rem] font-semibold font-[family-name:var(--font-geist-sans)] text-white">
-                CYOU
+              <h1 className="mx-auto text-[13rem] font-bold font-[family-name:var(--font-gantari)]  text-white">
+                BuildYou
               </h1>
               <div className="w-full flex justify-center">
                 <small className="text-xl text-white">
-                  Community You! You can build to support your community.
+                  Excel at every stage &amp; build the life
                 </small>
               </div>
             </div>
           </div>
-          <div className="flex h-screen align-middle justify-center font-[family-name:var(--font-redhat)] items-center border-silver-500 shadow-lg">
+          <div className="flex h-screen align-middle justify-center font-[family-name:var(--font-gantari)] items-center border-silver-500 shadow-lg">
             <Card className="justify-center align-middle space-y-4 ">
               <div>
-                <Title className="text-xl font-bold">Account Recovery</Title>
-                <p>Please enter your email address to recover your account.</p>
+                <h1 className="text-3xl font-bold font-[family-name:var(--font-gantari)]">Account Recovery</h1>
+                <p className="font-[family-name:var(--font-gantari)]">Please enter your email address to recover your account.</p>
               </div>
               <Form name="login" onFinish={onFinish}>
                 <div className="mt-8">
@@ -111,7 +111,7 @@ const SignIn = () => {
                     />
                   </Form.Item>
                 </div>
-                <div className="text-center mt-8">
+                <div className="text-center mt-8 font-[family-name:var(--font-gantari)]">
                   <p>
                     If your account exists so you will you will recieve OTP on
                     you email.

@@ -34,7 +34,7 @@ async function Home() {
   await prefetchData(); // Call prefetch function outside the component
 
   return (
-    <div className="w-full h-full  container">
+    <div className="w-full h-full">
       <HydrationBoundary state={dehydrate(queryClient)}>
         <React.Fragment>
           <Dashboard/>

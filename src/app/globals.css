@@ -25,7 +25,7 @@
   --accent: #eceff4;
 }
 
-/* Sider Navlinks light theme  */
+/* Sider Navlinks light & dark theme  */
 [data-theme="light"] .ant-menu-item:hover {
   background-color: #2b2a2a !important;
   color: white !important;
@@ -39,10 +39,12 @@
 [data-theme="light"] .ant-menu-item-selected span {
   background-color: none !important;
   color: white !important;
+  font-family: var(--font-gantari);
 }
 [data-theme="dark"] .ant-menu-item-selected span {
   background-color: none !important;
   color: white !important;
+  font-family: var(--font-gantari);
 }
 .ant-menu-item:active {
   background-color: none !important;
@@ -71,6 +73,7 @@ html {
   /* Prevent vertical scrolling */
   white-space: nowrap;
   scroll-snap-type: x mandatory;
+  font-family: var(--font-gantari);
 }
 
 body {

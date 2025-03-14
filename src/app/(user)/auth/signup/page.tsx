@@ -8,10 +8,8 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import Link from "next/link";
 import { userApi } from "@/api/user/user-api";
-import Image from "next/image";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -24,7 +22,7 @@ const SignUp = () => {
   const [api, contextHolder] = notification.useNotification();
 
   // Handle Image Upload
-  const handleUpload = (info: any) => {
+  const handleUpload = ({ info }: any) => {
     if (info.file != null) {
       setProfileImage(info.file);
     }
@@ -100,22 +98,22 @@ const SignUp = () => {
         className="grid items-center justify-center h-screen w-full"
       >
         <div className="lg:grid bg-gradient-to-r lg:grid-cols-2 xl:grid xl:grid-cols-3 md:grid grid-cols-2 w-screen">
-          <div className="hidden sm:flex h-screen align-middle bg-green-300 justify-center items-center xl:col-span-2">
-            <div className="justify-center align-middle items-center">
+          <div className="hidden sm:flex h-screen align-middle justify-center items-center xl:col-span-2">
+            <div className="justify-center align-middle items-center font-[family-name:var(--font-gantari)]">
               <h1 className="mx-auto text-[13rem] font-semibold text-white">
-                CYOU
+                BuildYou
               </h1>
               <div className="w-full flex justify-center">
-                <small className="text-xl text-white">
-                  Community You! You can build to support your community.
+                <small className="text-xl text-white ">
+                  Excel at every stage &amp; build the life
                 </small>
               </div>
             </div>
           </div>
           <div className="flex h-screen align-middle justify-center items-center border-silver-500 shadow-lg">
             <Card className="justify-center align-middle space-y-4">
-              <h1 className="text-4xl font-bold">Sign Up</h1>
-              <form className="space-y-4 w-[400px] mt-8">
+              <h1 className="text-4xl font-bold font-[family-name:var(--font-gantari)]">Sign Up</h1>
+              <form className="space-y-4 w-[400px] mt-8 font-[family-name:var(--font-gantari)]">
                 <div className="flex justify-center">
                   <Upload
                     listType="picture-circle"
@@ -189,7 +187,7 @@ const SignUp = () => {
                   />
                 </div>
               </form>
-              <div className="flex justify-between items-center">
+              <div className="flex justify-between items-center font-[family-name:var(--font-gantari)]  ">
                 <p>
                   If you have an account
                   <Link href="/auth/signin"> signin here</Link>
