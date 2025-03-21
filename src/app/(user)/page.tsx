@@ -4,11 +4,6 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
-import { categoryApi } from "@/api/category/category-api";
-import HeroSection from "./home/hero-section";
-import { Row } from "antd";
-import StickyNotesGrid from "./protected-route/dashboard/widgets/sticky-notes/sticky-note-grid";
 import Dashboard from "./protected-route/dashboard/dashboard";
 
 const queryClient = new QueryClient();

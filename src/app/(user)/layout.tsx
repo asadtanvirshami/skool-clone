@@ -7,9 +7,10 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import MainLayout from "@/components/ui/main-layout";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactQueryClientProvider from "@/provider/react-query/react-provider";
+import "@ant-design/v5-patch-for-react-19";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const currentTheme = localStorage.getItem("theme") || "light";
@@ -33,15 +34,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           >
             <ConfigProvider
               theme={{
-                
                 token: {
                   colorBgLayout: "var(--background)",
                   colorPrimary: "var(--foreground)",
                   borderRadius: 8,
                   colorBgContainer: "var(--background)",
                   colorText: "var(--foreground)",
-                  colorBgElevated:"#fff"
-                  
+                  colorBgElevated: "#fff",
+                },
+                components: {
+                  Dropdown: {
+                    colorBgElevated: "var(--components)",
+                  },
+                  Popover: {
+                    colorBgElevated: "var(--components)",
+                  },
                 },
               }}
             >

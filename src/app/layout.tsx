@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Gantari } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
 
 const celliad = localFont({
   src: "./fonts/Celliad.woff",
@@ -35,7 +36,7 @@ export default function RootLayout({
       <body
         className={`${gantari.variable} ${excali.variable} ${celliad.variable} antialiased`}
       >
-        {children}
+        <AntdRegistry>{children}</AntdRegistry>
       </body>
     </html>
   );

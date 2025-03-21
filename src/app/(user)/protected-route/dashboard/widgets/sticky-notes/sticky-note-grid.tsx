@@ -1,6 +1,9 @@
 "use client";
+import { EllipsisVertical, X } from "lucide-react";
 import React, { useState, useRef } from "react";
-
+import { Checkbox, ColorPicker, Dropdown, Popconfirm, Radio } from "antd";
+import type { MenuProps } from "antd";
+import moment from "moment";
 const GRID_SIZE = 150; // Base grid size
 const GRID_PADDING = 10; // Padding between notes
 const DEFAULT_COLORS = ["#FFD700", "#FF5733", "#33FF57", "#337BFF", "#FF33C4"]; // Default colors
@@ -10,7 +13,7 @@ const NOTE_SIZES = {
   large: { width: 220, height: 220 },
 };
 
-const StickyNotesGrid = () => {
+const StickyNotesGrid = ({ limit }: { limit: number }) => {
   const [notes, setNotes] = useState<any[]>([]);
   const [counter, setCounter] = useState(0);
   const [hoveredGrid, setHoveredGrid] = useState<{
@@ -36,6 +39,7 @@ const StickyNotesGrid = () => {
   };
 
   const addNote = () => {
+    if (notes.length >= limit) return;
     const { x, y } = getNextPosition();
 
     const newNote = {
@@ -45,6 +49,8 @@ const StickyNotesGrid = () => {
       y,
       color: DEFAULT_COLORS[counter % DEFAULT_COLORS.length],
       size: "medium", // Default size
+      date: moment().format("MMMM Do YYYY"),
+      time: moment().format("h:mm a"),
     };
 
     setNotes([...notes, newNote]);
@@ -102,32 +108,18 @@ const StickyNotesGrid = () => {
     draggedNoteRef.current = null;
   };
 
-  const handleColorChange = (noteId: string, color: string) => {
-    setNotes((prevNotes) =>
-      prevNotes.map((note) => (note.id === noteId ? { ...note, color } : note))
-    );
-  };
-
-  const handleSizeChange = (noteId: string, newSize: string) => {
-    setNotes((prevNotes) =>
-      prevNotes.map((note) =>
-        note.id === noteId ? { ...note, size: newSize } : note
-      )
-    );
-  };
-
   return (
     <React.Fragment>
-      {" "}
       <button
         onClick={addNote}
+        disabled={notes.length >= limit}
         className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg shadow-md mb-4"
       >
         Add Note +
       </button>
       <div
         ref={gridRef}
-        className="p-4 h-[400px] overflow-hidden relative border border-w-1 rounded-lg"
+        className="p-4 h-[400px] overflow-hidden relative shadow-lg rounded-md"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -165,6 +157,11 @@ const StickyNotesGrid = () => {
               }}
               className="p-4 rounded-lg shadow-md flex flex-col cursor-move transition-all "
             >
+              <StickyHeader
+                note={note}
+                setNotes={setNotes}
+                deleteNote={deleteNote}
+              />
               <textarea
                 value={note.content}
                 onChange={(e) => {
@@ -176,32 +173,14 @@ const StickyNotesGrid = () => {
                 }}
                 className="flex-grow bg-transparent border-none resize-none font-[family-name:var(--font-excali)] focus:outline-none text-black"
               />
-
-              {/* Color Picker */}
-              <input
-                type="color"
-                value={note.color}
-                onChange={(e) => handleColorChange(note.id, e.target.value)}
-                className="w-full cursor-pointer"
-              />
-
-              {/* Size Selector */}
-              <select
-                value={note.size}
-                onChange={(e) => handleSizeChange(note.id, e.target.value)}
-                className="w-min mt-1 p-1 bg-white border border-gray-300 rounded cursor-pointer"
-              >
-                <option value="small">Small</option>
-                <option value="medium">Medium</option>
-                <option value="large">Large</option>
-              </select>
-
-              <button
-                onClick={() => deleteNote(note.id)}
-                className="self-end text-gray-600 hover:text-gray-800"
-              >
-                ×
-              </button>
+              <div className="flex justify-end">
+                {note.time && (
+                  <span className="text-black font-sans text-[11.8px]">
+                    {(note.layout === "TimeOnly" || note.layout === "Both") &&
+                      `${note.time}`}
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
@@ -211,3 +190,175 @@ const StickyNotesGrid = () => {
 };
 
 export default StickyNotesGrid;
+
+import type { ColorPickerProps, GetProp } from "antd";
+type Color = Extract<
+  GetProp<ColorPickerProps, "value">,
+  string | { cleared: any }
+>;
+const StickyHeader = ({
+  note,
+  deleteNote,
+  setNotes,
+}: {
+  note: any;
+  setNotes: React.Dispatch<React.SetStateAction<any[]>>;
+  deleteNote: (id: string) => void;
+}) => {
+  const [openOption, setOpenOption] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [colorValue, setColorValue] = useState<Color>(note.color);
+  const plainOptions = ["TimeOnly", "DateOnly", "Both", "None"];
+  console.log(
+    typeof colorValue === "string" ? colorValue : colorValue!.toHexString()
+  );
+
+  const handleColorChange = (noteId: string, color: string) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) => (note.id === noteId ? { ...note, color } : note))
+    );
+  };
+
+  const handleSizeChange = (noteId: string, newSize: string) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === noteId ? { ...note, size: newSize } : note
+      )
+    );
+  };
+
+  const handleLayoutChange = (noteId: string, newLayout: Array<string>) => {
+    setNotes((prevNotes) =>
+      prevNotes.map((note) =>
+        note.id === noteId
+          ? {
+              ...note,
+              layout: newLayout[0],
+            }
+          : note
+      )
+    );
+  };
+
+  const showPopconfirm = () => {
+    setOpen(true);
+  };
+
+  const handleOk = () => {
+    setConfirmLoading(true);
+    deleteNote(note.id);
+    setTimeout(() => {
+      setOpen(false);
+      setConfirmLoading(false);
+    }, 2000);
+  };
+
+  const handleCancel = () => {
+    console.log("Clicked cancel button");
+    setOpen(false);
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: "Color",
+      children: [
+        {
+          key: "1-1",
+          label: (
+            <ColorPicker
+              value={note.color}
+              onChange={(color) =>
+                handleColorChange(note.id, color.toHexString())
+              }
+              className="w-full cursor-pointer"
+            />
+          ),
+        },
+      ],
+    },
+    {
+      key: "2",
+      label: "Canvas Size",
+      children: [
+        {
+          key: "2-1",
+          label: (
+            <Radio.Group
+              value={note.size}
+              style={{ flex: 1, display: "block" }}
+              onChange={(e) => handleSizeChange(note.id, e.target.value)}
+              options={[
+                { value: "small", label: "small" },
+                { value: "medium", label: "medium" },
+                { value: "large", label: "large" },
+              ]}
+            />
+          ),
+        },
+      ],
+    },
+    {
+      key: "3",
+      label: "Layout",
+      children: [
+        {
+          key: "2-1",
+          label: (
+            <Checkbox.Group
+              value={note.layout}
+              style={{ flex: 1, width: "20%" }}
+              onChange={(e) =>
+                handleLayoutChange(
+                  note.id,
+                  e.map((x) => x)
+                )
+              }
+              options={plainOptions}
+            />
+          ),
+        },
+      ],
+    },
+  ];
+
+  return (
+    <div className="flex justify-between items-center ">
+      <div>
+        {note.date && (
+          <span className="text-black font-sans text-[11.8px]">
+            {(note.layout === "DateOnly" || note.layout === "Both") &&
+              `${note.date}`}
+          </span>
+        )}
+      </div>
+
+      <div>
+        <Popconfirm
+          title="Are you sure to delete this note?"
+          open={open}
+          onConfirm={handleOk}
+          okButtonProps={{ loading: confirmLoading }}
+          onCancel={handleCancel}
+        >
+          <button className="w-fit" onClick={showPopconfirm}>
+            <X size={14} className="text-gray-600 hover:text-red-500" />
+          </button>
+        </Popconfirm>
+        <Dropdown
+          open={openOption}
+          onOpenChange={() => setOpenOption(!openOption)}
+          menu={{ items }}
+          placement="bottom"
+          trigger={["click"]}
+          destroyPopupOnHide
+        >
+          <button>
+            <EllipsisVertical size={14} className="text-gray-600" />
+          </button>
+        </Dropdown>
+      </div>
+    </div>
+  );
+};

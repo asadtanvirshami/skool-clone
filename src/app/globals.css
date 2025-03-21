@@ -6,6 +6,7 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
+  --components: #2b2a2a;
   --muted: #2b2a2a;
   --accent: #eceff4;
 }
@@ -15,17 +16,22 @@
   --background: #181818;
   --foreground: #ffffff;
   --muted: #b3b3b3;
+  --components: #2b2a2a;
   --accent: #333333;
 }
 
 [data-theme="light"] {
   --background: #ffffff;
   --foreground: #000000;
+  --components: #ffff;
   --muted: #2b2a2a;
   --accent: #eceff4;
 }
 
 /* Sider Navlinks light & dark theme  */
+.ant-menu-item {
+  font-family: var(--font-gantari);
+}
 [data-theme="light"] .ant-menu-item:hover {
   background-color: #2b2a2a !important;
   color: white !important;
@@ -52,6 +58,15 @@
 }
 .ant-menu-item:focus {
   background-color: none !important;
+  color: white !important;
+}
+
+.trasparent-bg-card {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 20px !important;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
   color: white !important;
 }
 
