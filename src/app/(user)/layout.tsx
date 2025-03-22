@@ -13,13 +13,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState("light");
 
   useEffect(() => {
-    const currentTheme = localStorage.getItem("theme") || "light";
+    const currentTheme = localStorage.getItem("theme") || "dark";
     setTheme(currentTheme);
     document.documentElement.setAttribute("data-theme", currentTheme);
   }, []);
 
   const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
+    const newTheme = theme === "light" ? "dark" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
@@ -43,11 +43,26 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   colorBgElevated: "#fff",
                 },
                 components: {
+                  Button: {
+                    defaultHoverBg: "var(--components)",
+                    colorText:"var(--foreground)"
+                  },
                   Dropdown: {
                     colorBgElevated: "var(--components)",
                   },
                   Popover: {
                     colorBgElevated: "var(--components)",
+                  },
+                  Table: {
+                    colorBgElevated: "var(--components)",
+                    colorText: "var(--foreground)",
+                    colorTextHeading: "var(--foreground)",
+                    headerBg: "var(--components)",
+                    rowHoverBg: "var(--components)",
+                    colorBgTextHover: "var(--components)",
+                  },
+                  Pagination: {
+                    colorPrimary: "var(--foreground)",
                   },
                 },
               }}

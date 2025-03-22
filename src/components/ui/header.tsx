@@ -1,6 +1,6 @@
-import { Button, Space } from "antd";
+import { Avatar, Button, Space } from "antd";
 import React from "react";
-import { CompassOutlined } from "@ant-design/icons"
+import { CompassOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
 const DiscoverButton = () => {
@@ -19,9 +19,15 @@ const DiscoverButton = () => {
 const LoginButton = () => {
   return (
     <Button shape="round">
-      <Link href={"/auth/signup"}>LOGIN</Link>
+      <Link href={"/auth/signup"} className=" decoration-none">
+        LOGIN
+      </Link>
     </Button>
   );
+};
+
+const AvatarButton = () => {
+  return <Avatar shape="circle" size="default"  />;
 };
 
 const Header = ({ children }: { children: React.ReactNode }) => {
@@ -31,6 +37,7 @@ const Header = ({ children }: { children: React.ReactNode }) => {
         {children}
         <Space>
           <Space>
+            <AvatarButton/>
             <DiscoverButton />
             <LoginButton />
           </Space>

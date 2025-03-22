@@ -20,6 +20,10 @@ const StickyNotesGrid = ({ limit }: { limit: number }) => {
     x: number;
     y: number;
   } | null>(null);
+  const [noteSettings, setNoteSettings] = useState<any | null>({
+    size: "medium",
+    layout: "none",
+  });
 
   const gridRef = useRef<HTMLDivElement | null>(null);
   const draggedNoteRef = useRef<string | null>(null);
@@ -48,7 +52,8 @@ const StickyNotesGrid = ({ limit }: { limit: number }) => {
       x,
       y,
       color: DEFAULT_COLORS[counter % DEFAULT_COLORS.length],
-      size: "medium", // Default size
+      size: noteSettings.size,
+      layout: noteSettings.layout,
       date: moment().format("MMMM Do YYYY"),
       time: moment().format("h:mm a"),
     };
@@ -159,6 +164,7 @@ const StickyNotesGrid = ({ limit }: { limit: number }) => {
             >
               <StickyHeader
                 note={note}
+                setNoteSettings={setNoteSettings}
                 setNotes={setNotes}
                 deleteNote={deleteNote}
               />
@@ -200,19 +206,18 @@ const StickyHeader = ({
   note,
   deleteNote,
   setNotes,
+  setNoteSettings,
 }: {
   note: any;
   setNotes: React.Dispatch<React.SetStateAction<any[]>>;
   deleteNote: (id: string) => void;
+  setNoteSettings: React.Dispatch<React.SetStateAction<any>>;
 }) => {
   const [openOption, setOpenOption] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [colorValue, setColorValue] = useState<Color>(note.color);
   const plainOptions = ["TimeOnly", "DateOnly", "Both", "None"];
-  console.log(
-    typeof colorValue === "string" ? colorValue : colorValue!.toHexString()
-  );
 
   const handleColorChange = (noteId: string, color: string) => {
     setNotes((prevNotes) =>
@@ -226,6 +231,7 @@ const StickyHeader = ({
         note.id === noteId ? { ...note, size: newSize } : note
       )
     );
+    setNoteSettings((note) => ({ ...note, size: newSize }));
   };
 
   const handleLayoutChange = (noteId: string, newLayout: Array<string>) => {
@@ -239,6 +245,7 @@ const StickyHeader = ({
           : note
       )
     );
+    setNoteSettings((note) => ({ ...note, layout: newLayout[0] }));
   };
 
   const showPopconfirm = () => {
@@ -304,7 +311,7 @@ const StickyHeader = ({
       label: "Layout",
       children: [
         {
-          key: "2-1",
+          key: "3 -1",
           label: (
             <Checkbox.Group
               value={note.layout}
@@ -339,7 +346,7 @@ const StickyHeader = ({
           title="Are you sure to delete this note?"
           open={open}
           onConfirm={handleOk}
-          okButtonProps={{ loading: confirmLoading }}
+          okButtonProps={{ loading: confirmLoading, color: "danger" }}
           onCancel={handleCancel}
         >
           <button className="w-fit" onClick={showPopconfirm}>
