@@ -58,6 +58,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                     colorText: "var(--foreground)",
                     colorTextHeading: "var(--foreground)",
                     headerBg: "var(--components)",
+                    colorBgContainer: "var(--components)",
                     rowHoverBg: "var(--components)",
                     colorBgTextHover: "var(--components)",
                   },
