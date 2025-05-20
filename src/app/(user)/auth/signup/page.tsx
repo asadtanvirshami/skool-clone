@@ -79,6 +79,7 @@ const SignUp = () => {
       setTimeout(() => {
         router.push("/auth/signin");
       }, 1500);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       api.error({
         message: "Sign Up Failed",

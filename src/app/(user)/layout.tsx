@@ -1,29 +1,29 @@
-// Layout.jsx
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { App, ConfigProvider } from "antd";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import MainLayout from "@/components/ui/main-layout";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import ReactQueryClientProvider from "@/provider/react-query/react-provider";
 import "@ant-design/v5-patch-for-react-19";
+import StoreProvider from "@/redux/storeProvider";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState("light");
+  // const [theme, setTheme] = useState("light");
 
   useEffect(() => {
     const currentTheme = localStorage.getItem("theme") || "dark";
-    setTheme(currentTheme);
+    // setTheme(currentTheme);
     document.documentElement.setAttribute("data-theme", currentTheme);
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "dark";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
+  // const toggleTheme = () => {
+  //   const newTheme = theme === "light" ? "dark" : "dark";
+  //   setTheme(newTheme);
+  //   localStorage.setItem("theme", newTheme);
+  //   document.documentElement.setAttribute("data-theme", newTheme);
+  // };
 
   return (
     <App>
@@ -45,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 components: {
                   Button: {
                     defaultHoverBg: "var(--components)",
-                    colorText:"var(--foreground)"
+                    colorText: "var(--foreground)",
                   },
                   Dropdown: {
                     colorBgElevated: "var(--components)",
@@ -65,10 +65,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   Pagination: {
                     colorPrimary: "var(--foreground)",
                   },
+                  Input: {
+                    colorTextDisabled: "var(--muted)",
+                    colorBgSolidHover: "var(--foreground)",
+                    colorBorder: "var(--components)",
+                    hoverBorderColor: "var(--components)",
+                    colorTextPlaceholder: "var(--muted)",
+                  },
+                  Select: {
+                    colorTextDisabled: "var(--muted)",
+                    colorBgSolidHover: "var(--foreground)",
+                    colorBorder: "var(--components)",
+                    hoverBorderColor: "var(--components)",
+                    colorTextPlaceholder: "var(--muted)",
+                    colorBgElevated: "var(--components)",
+                  },
                 },
               }}
             >
-              <MainLayout>{children}</MainLayout>
+              <StoreProvider>
+                <MainLayout>{children}</MainLayout>
+              </StoreProvider>
             </ConfigProvider>
           </GoogleOAuthProvider>
         </ReactQueryClientProvider>

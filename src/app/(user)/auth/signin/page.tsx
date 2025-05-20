@@ -1,126 +1,117 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button, Card, Divider, Input, notification } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { userApi } from "@/api/user/user-api";
 import { GoogleLogin } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "@/redux/actions/user-action";
+import { useLogin } from "@/app/hooks/use-login";
+import { useGoogleLogin } from "@/app/hooks/use-google";
+import { GoogleCredentialResponse } from "@/app/dto/auth.dto";
+import { notify, notifyError } from "@/app/util/errorHandler";
 
 const SignIn = () => {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
-  const [api, contextHolder] = notification.useNotification();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
-  const handleClick = async () => {
-    setIsLoading(true);
+  const { mutate: login, isPending: isLoginPending } = useLogin();
+  const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLogin();
 
-    if (email === "" || password === "") {
-      setIsLoading(false);
-      return api.error({
-        message: "Error",
-        description: "Please enter email and password",
-      });
-    }
-
-    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setIsLoading(false);
-      return api.error({
-        message: "Invalid email",
-        description: "Please enter a valid email",
-      });
-    }
-
-    try {
-      const response = (await userApi.login(
-        email.toLowerCase(),
-        password
-      )) as unknown as {
-        data: { token: string; success: boolean; error: string };
-      };
-
-      setIsLoading(false);
-      if (response?.data?.success === true) {
-        const token = response.data.token;
-        Cookies.set("token", token, { expires: 1 });
-        router.push("/protected-route/dashboard");
-      } else {
-        setIsLoading(false);
-        return api.error({
-          message: "Error",
-          description: response?.data?.error,
-        });
+  const handleLogin = () => {
+    login(
+      { email: email.toLowerCase(), password },
+      {
+        onSuccess: (data) => {
+          const decoded = jwtDecode(data.accessToken);
+          console.log("====================================");
+          console.log(data);
+          notifyError({
+            type: "ValidationError",
+            message: "Error",
+            description: "Please fix the validation errors.",
+          });
+          console.log("====================================");
+          const token = data.accessToken;
+          const decoded = jwtDecode(token);
+          dispatch(loginSuccess(decoded));
+          Cookies.set("token", token, {
+            expires: 1,
+            sameSite: "strict",
+            secure: true,
+          });
+          // router.push("/");
+        },
+        onError: (error) => {
+          console.error("Login Error:", error);
+          notifyError({
+            type: "ValidationError",
+            message: "Error",
+            description: "Please fix the validation errors.",
+          });
+        },
       }
-    } catch (error: any) {
-      setIsLoading(false);
-      console.error(error);
-      return api.error({
-        message: "Error",
-        description: error?.response?.data?.error || "Please try again.",
-      });
-    }
+    );
   };
 
-  const handleSuccess = async (credentialResponse: any) => {
-    const request = await userApi.google_signin(credentialResponse);
-
-    if (!request?.data?.error && request?.data?.success) {
-      const token = request?.data?.token;
-      Cookies.set("token", token, {
-        expires: 1,
-        secure: true,
-        sameSite: "Strict",
-      });
-      api.success({
-        message: "Success",
-        description: "Google sign in successful.",
-      });
-      router.push("/dashboard");
-    }
+  const handleGoogleSuccess = (
+    credentialResponse: GoogleCredentialResponse
+  ) => {
+    googleLogin(
+      { credential: credentialResponse.credential },
+      {
+        onSuccess: (response) => {
+          Cookies.set("token", response.token, {
+            expires: 1,
+            secure: true,
+            sameSite: "Strict",
+          });
+          notify({
+            type: "success",
+            title: "Success",
+            description: "Login successful",
+          });
+          router.push("/dashboard");
+        },
+        onError: (error) => {
+          console.error("Google Sign-in Error:", error);
+          notifyError({
+            type: "UnauthorizedError",
+            message: "Error",
+            description: "Please try again.",
+          });
+        },
+      }
+    );
   };
 
-  const handleError = () => {
-    console.error("Login Failed");
-    return api.error({
-      message: "Error",
-      description: "Please try again.",
-    });
+  const handleGoogleError = () => {
+    console.error("Google Login Failed");
   };
 
   return (
     <>
-      {contextHolder}
-
-      <div
-        data-cy="main-grid"
-        className="grid items-center justify-center h-screen w-full font-[family-name:var(--font-gantari)] "
-      >
-        <div className="lg:grid bg-gradient-to-r lg:grid-cols-2 xl:grid xl:grid-cols-3 md:grid grid-cols-2 w-screen">
-          <div className="hidden sm:flex h-screen align-middle justify-center items-center xl:col-span-2">
-            <div className="justify-center align-middle items-center">
-              <h1 className="mx-auto text-[13rem] font-bold ">
-                BuildYou
-              </h1>
-              <div className="w-full flex justify-center">
-                <small className="text-xl">
-                  Excel at every stage &amp; build the life
-                </small>
-              </div>
+      <div className="grid items-center justify-center h-screen w-full font-[var(--font-gantari)]">
+        <div className="lg:grid lg:grid-cols-2 xl:grid xl:grid-cols-3 w-full">
+          {/* Branding Section */}
+          <div className="hidden lg:flex h-screen items-center justify-center xl:col-span-2 bg-gradient-to-r">
+            <div className="text-center">
+              <h1 className="text-[13rem] font-bold">BuildYou</h1>
+              <p className="text-xl">Excel at every stage & build the life</p>
             </div>
           </div>
-          <div className="flex h-screen align-middle justify-center items-center border-silver-500 shadow-lg">
-            <Card
-              variant="outlined"
-              className="justify-center align-middle space-y-4"
-            >
-              <div>
-                <h1 className="text-4xl font-bold font-[family-name:var(--font-gantari)] ">Sign In</h1>
-              </div>
-              <form className="space-y-4 w-[400px] mt-8 font-[family-name:var(--font-gantari)] ">
+
+          {/* Sign-In Card */}
+          <div className="flex h-screen items-center justify-center shadow-lg">
+            <Card className="w-[400px] space-y-6 p-4">
+              <h1 className="text-4xl font-bold">Sign In</h1>
+
+              <form className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block font-medium">
                     Email
@@ -150,33 +141,35 @@ const SignIn = () => {
                   />
                 </div>
               </form>
-              <div className="flex justify-between items-center mt-3 font-[family-name:var(--font-gantari)] ">
-                <p>
-                  If you don&apos;t have an account
-                  <Link href="/auth/signup"> click here</Link>
-                </p>
-                <p>
-                  <Link href="/auth/recovery"> Forget password</Link>
-                </p>
+
+              <div className="flex justify-between text-sm">
+                <span>
+                  Don&apos;t have an account?{" "}
+                  <Link href="/auth/signup">Sign up</Link>
+                </span>
+                <Link href="/auth/recovery">Forgot password?</Link>
               </div>
-              <div className="flex justify-end items-center">
+
+              <div className="flex justify-end">
                 <Button
                   size="large"
+                  type="primary"
+                  loading={isLoginPending || isGooglePending}
                   onClick={(e) => {
                     e.preventDefault();
-                    handleClick();
+                    handleLogin();
                   }}
-                  loading={isLoading}
-                  className="border p-2 mt-4 rounded-lg"
                 >
                   Sign In
                 </Button>
               </div>
+
               <Divider>or</Divider>
+
               <div className="flex justify-center">
                 <GoogleLogin
-                  onSuccess={handleSuccess}
-                  onError={handleError}
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
                   useOneTap
                 />
               </div>

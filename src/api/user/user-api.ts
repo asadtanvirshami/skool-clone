@@ -1,21 +1,23 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
+import Cookies from "js-cookie";
+const token = Cookies.get("token");
 
-interface User {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  profile_picture: string;
-  blocked: boolean;
-}
+// interface User {
+//   firstName: string;
+//   lastName: string;
+//   email: string;
+//   password: string;
+//   profile_picture: string;
+//   blocked: boolean;
+// }
 
 const userApi = {
   login: (email: string, password: string) => {
     return axios.post(
-      (process.env.NEXT_PUBLIC_API_URL as string) + "user/auth/signin",
+      (process.env.NEXT_PUBLIC_API_URL as string) + "user/login",
       {
-        Email: email,
-        Password: password,
+        email: email,
+        password: password,
       }
     );
   },
@@ -89,7 +91,7 @@ const userApi = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error Response:", error.response?.data);
-        return error.response?.data; 
+        return error.response?.data;
       } else {
         console.error("Unexpected Error:", error);
         return { message: "An unexpected error occurred" };
@@ -106,7 +108,7 @@ const userApi = {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error Response:", error.response?.data);
-        return error.response?.data; 
+        return error.response?.data;
       } else {
         console.error("Unexpected Error:", error);
         return { message: "An unexpected error occurred" };
@@ -127,6 +129,29 @@ const userApi = {
       if (axios.isAxiosError(error)) {
         console.error("Error Response:", error.response?.data);
         return error.response?.data; // Access the response property safely
+      } else {
+        console.error("Unexpected Error:", error);
+        return { message: "An unexpected error occurred" };
+      }
+    }
+  },
+
+  findOne: async (id: string) => {
+    try {
+      if (!token) return;
+      const response = await axios.get(
+        (process.env.NEXT_PUBLIC_API_URL as string) + `user/get/${id}`,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error Response:", error.response?.data);
+        return error.response?.data;
       } else {
         console.error("Unexpected Error:", error);
         return { message: "An unexpected error occurred" };
