@@ -1,7 +1,15 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { Button, Flex, Card, Typography, Input, notification } from "antd";
+import {
+  Button,
+  Flex,
+  Card,
+  Typography,
+  Input,
+  notification,
+  InputRef,
+} from "antd";
 import { useParams, useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { userApi } from "@/api/user/user-api";
@@ -15,7 +23,7 @@ const SignIn = () => {
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<(InputRef | null)[]>([]);
   const params = useParams<{ id: string }>();
 
   const handleOtpChange = (index: number, value: string) => {
@@ -141,7 +149,9 @@ const SignIn = () => {
                   {otp.map((digit, index) => (
                     <Input
                       key={index}
-                      ref={(el: any) => (inputRefs.current[index] = el?.input)}
+                      ref={(el: InputRef | null) => {
+                        inputRefs.current[index] = el;
+                      }}
                       maxLength={1}
                       size="large"
                       className="w-12 h-12 text-center text-xl font-bold"

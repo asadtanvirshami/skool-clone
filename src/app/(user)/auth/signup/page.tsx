@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Button, Card, Input, notification, Upload } from "antd";
+import { UploadChangeParam, UploadFile } from "antd/lib/upload/interface";
 import {
   LockOutlined,
   PlusCircleOutlined,
@@ -9,7 +10,8 @@ import {
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { userApi } from "@/api/user/user-api";
+import { useSignup } from "@/app/hooks/use-signin";
+import { AxiosError } from "axios";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -17,77 +19,71 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
+
+  const { mutate: signup, isPending } = useSignup();
+
   const [api, contextHolder] = notification.useNotification();
 
-  // Handle Image Upload
-  const handleUpload = ({ info }: any) => {
-    if (info.file != null) {
-      setProfileImage(info.file);
+  const handleUpload = (info: UploadChangeParam<UploadFile>) => {
+    if (info.file && info.file.originFileObj) {
+      setProfileImage(info.file.originFileObj);
+    } else {
+      setProfileImage(null);
     }
   };
 
   const handleClick = async () => {
-    console.log(firstName, profileImage, email, password, lastName);
-    setIsLoading(true);
-
     if (!firstName || !lastName || !email || !password || !profileImage) {
-      setIsLoading(false);
       return api.error({
-        message: "Error",
-        description: "Please fill in all fields and upload an image",
+        style: { background: "red", color: "white", accentColor: "white" },
+        message: "Validation Error",
+        description: "Please fill in all fields and upload a profile image.",
       });
     }
 
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     if (!emailRegex.test(email)) {
-      setIsLoading(false);
       return api.error({
         message: "Invalid Email",
-        description: "Please enter a valid email address",
+        description: "Please enter a valid email address.",
       });
     }
 
-    try {
-      // Create FormData
-      const formData = new FormData();
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("email", email);
-      formData.append("password", password);
-      formData.append("profileImage", profileImage);
-
-      // API Request
-      const response = await userApi.signup(
+    signup(
+      {
         firstName,
         lastName,
-        email,
+        email: email.toLowerCase(),
         password,
-        profileImage
-      );
-      console.log(response);
+        profileImage,
+      },
+      {
+        onSuccess: (data) => {
+          api.success({
+            message: "Sign Up Success",
+            description:
+              data.message || "Your account has been created successfully!",
+          });
+          setTimeout(() => {
+            router.push("/auth/signin");
+          }, 1500);
+        },
+        onError: (error: AxiosError) => {
+          const errorMessage =
+            (error.response?.data as { message?: string })?.message ||
+            error.message ||
+            "An unexpected error occurred during sign up.";
 
-      if (response?.data?.success) {
-        api.success({
-          message: "Sign Up Success",
-          description: "Successfully signed up",
-        });
-      } else {
-        setIsLoading(false);
+          api.error({
+            message: "Sign Up Failed",
+            description: errorMessage,
+          });
+          console.error("Signup error:", error);
+        },
       }
-      setTimeout(() => {
-        router.push("/auth/signin");
-      }, 1500);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      api.error({
-        message: "Sign Up Failed",
-        description: error.response?.data?.message || "An error occurred",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    );
   };
 
   return (
@@ -113,13 +109,15 @@ const SignUp = () => {
           </div>
           <div className="flex h-screen align-middle justify-center items-center border-silver-500 shadow-lg">
             <Card className="justify-center align-middle space-y-4">
-              <h1 className="text-4xl font-bold font-[family-name:var(--font-gantari)]">Sign Up</h1>
+              <h1 className="text-4xl font-bold font-[family-name:var(--font-gantari)]">
+                Sign Up
+              </h1>
               <form className="space-y-4 w-[400px] mt-8 font-[family-name:var(--font-gantari)]">
                 <div className="flex justify-center">
                   <Upload
                     listType="picture-circle"
                     maxCount={1}
-                    beforeUpload={() => false} // Prevent automatic upload
+                    beforeUpload={() => false}
                     onChange={handleUpload}
                   >
                     {!profileImage && (
@@ -188,7 +186,7 @@ const SignUp = () => {
                   />
                 </div>
               </form>
-              <div className="flex justify-between items-center font-[family-name:var(--font-gantari)]  ">
+              <div className="flex justify-between items-center font-[family-name:var(--font-gantari)]">
                 <p>
                   If you have an account
                   <Link href="/auth/signin"> signin here</Link>
@@ -200,7 +198,7 @@ const SignUp = () => {
                     e.preventDefault();
                     handleClick();
                   }}
-                  loading={isLoading}
+                  loading={isPending}
                   className="border bg-red-400 p-2 mt-4 rounded-lg"
                 >
                   Sign Up

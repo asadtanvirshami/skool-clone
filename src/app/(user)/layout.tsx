@@ -24,70 +24,71 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   //   localStorage.setItem("theme", newTheme);
   //   document.documentElement.setAttribute("data-theme", newTheme);
   // };
+  console.log(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string);
 
   return (
     <App>
       <AntdRegistry>
         <ReactQueryClientProvider>
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
-          >
-            <ConfigProvider
-              theme={{
-                token: {
-                  colorBgLayout: "var(--background)",
-                  colorPrimary: "var(--foreground)",
-                  borderRadius: 8,
-                  colorBgContainer: "var(--background)",
+          <ConfigProvider
+            theme={{
+              token: {
+                colorBgLayout: "var(--background)",
+                colorPrimary: "var(--foreground)",
+                borderRadius: 8,
+                colorBgContainer: "var(--background)",
+                colorText: "var(--foreground)",
+                colorBgElevated: "#fff",
+              },
+              components: {
+                Button: {
+                  defaultHoverBg: "var(--components)",
                   colorText: "var(--foreground)",
-                  colorBgElevated: "#fff",
                 },
-                components: {
-                  Button: {
-                    defaultHoverBg: "var(--components)",
-                    colorText: "var(--foreground)",
-                  },
-                  Dropdown: {
-                    colorBgElevated: "var(--components)",
-                  },
-                  Popover: {
-                    colorBgElevated: "var(--components)",
-                  },
-                  Table: {
-                    colorBgElevated: "var(--components)",
-                    colorText: "var(--foreground)",
-                    colorTextHeading: "var(--foreground)",
-                    headerBg: "var(--components)",
-                    colorBgContainer: "var(--components)",
-                    rowHoverBg: "var(--components)",
-                    colorBgTextHover: "var(--components)",
-                  },
-                  Pagination: {
-                    colorPrimary: "var(--foreground)",
-                  },
-                  Input: {
-                    colorTextDisabled: "var(--muted)",
-                    colorBgSolidHover: "var(--foreground)",
-                    colorBorder: "var(--components)",
-                    hoverBorderColor: "var(--components)",
-                    colorTextPlaceholder: "var(--muted)",
-                  },
-                  Select: {
-                    colorTextDisabled: "var(--muted)",
-                    colorBgSolidHover: "var(--foreground)",
-                    colorBorder: "var(--components)",
-                    hoverBorderColor: "var(--components)",
-                    colorTextPlaceholder: "var(--muted)",
-                    colorBgElevated: "var(--components)",
-                  },
+                Dropdown: {
+                  colorBgElevated: "var(--components)",
                 },
-              }}
-            >
-              <StoreProvider>
+                Popover: {
+                  colorBgElevated: "var(--components)",
+                },
+                Table: {
+                  colorBgElevated: "var(--components)",
+                  colorText: "var(--foreground)",
+                  colorTextHeading: "var(--foreground)",
+                  headerBg: "var(--components)",
+                  colorBgContainer: "var(--components)",
+                  rowHoverBg: "var(--components)",
+                  colorBgTextHover: "var(--components)",
+                },
+                Pagination: {
+                  colorPrimary: "var(--foreground)",
+                },
+                Input: {
+                  colorTextDisabled: "var(--muted)",
+                  colorBgSolidHover: "var(--foreground)",
+                  colorBorder: "var(--components)",
+                  hoverBorderColor: "var(--components)",
+                  colorTextPlaceholder: "var(--muted)",
+                },
+                Select: {
+                  colorTextDisabled: "var(--muted)",
+                  colorBgSolidHover: "var(--foreground)",
+                  colorBorder: "var(--components)",
+                  hoverBorderColor: "var(--components)",
+                  colorTextPlaceholder: "var(--muted)",
+                  colorBgElevated: "var(--components)",
+                },
+              },
+            }}
+          >
+            <StoreProvider>
+              <GoogleOAuthProvider
+                clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID as string}
+              >
                 <MainLayout>{children}</MainLayout>
-              </StoreProvider>
-            </ConfigProvider>
-          </GoogleOAuthProvider>
+              </GoogleOAuthProvider>
+            </StoreProvider>
+          </ConfigProvider>
         </ReactQueryClientProvider>
       </AntdRegistry>
     </App>

@@ -11,4 +11,5 @@ export interface AppError {
   type: AppErrorType;
   message: string;
   description?: string;
+  style: { background: string; color: string; accentColor: string };
 }

@@ -1,20 +1,9 @@
 import { Avatar, Button, Space } from "antd";
 import React from "react";
-import { CompassOutlined } from "@ant-design/icons";
 import Link from "next/link";
+import { useSelector } from "react-redux";
 
-const DiscoverButton = () => {
-  return (
-    <Button
-      variant="solid"
-      shape="round"
-      iconPosition="end"
-      icon={<CompassOutlined />}
-    >
-      Discover
-    </Button>
-  );
-};
+
 
 const LoginButton = () => {
   return (
@@ -27,7 +16,23 @@ const LoginButton = () => {
 };
 
 const AvatarButton = () => {
-  return <Avatar shape="circle" size="default"  />;
+  const { user } = useSelector(
+    (state: {
+      user: { user: { picture: string; firstName: string; lastName: string } };
+    }) => state.user
+  );
+
+  return (
+    <Avatar
+      alt="avatar"
+      className={!user?.picture ? "!bg-red-800" : ""}
+      src={user?.picture}
+      shape="circle"
+      size="default"
+    >
+      {!user?.picture && user?.firstName[0]}
+    </Avatar>
+  );
 };
 
 const Header = ({ children }: { children: React.ReactNode }) => {
@@ -37,8 +42,8 @@ const Header = ({ children }: { children: React.ReactNode }) => {
         {children}
         <Space>
           <Space>
-            <AvatarButton/>
-            <DiscoverButton />
+            <AvatarButton />
+            {/* <UserInfo /> */}
             <LoginButton />
           </Space>
         </Space>

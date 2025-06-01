@@ -18,7 +18,7 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSelector } from "react-redux";
-import type { RootState } from "@/store"; // adjust this import
+import type { RootState } from "@/redux/store"; // adjust this import
 
 import Header from "./header";
 
@@ -29,6 +29,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
   const path = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const isAuthPath = path.startsWith("/auth");
+  const isProtectedRoute = path.startsWith("/protected-route/");
 
   const user = useSelector((state: RootState) => state.user.user);
   const isDarkMode = token.colorBgBase === "#000";
@@ -114,9 +115,6 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             collapsible
             collapsed={collapsed}
           >
-            <div className="demo-logo-vertical text-center py-4 font-semibold">
-              {user?.name ?? "Guest"}
-            </div>
             <Menu
               style={{ border: "none" }}
               theme={isDarkMode ? "dark" : "light"}
@@ -126,18 +124,20 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
             />
           </Sider>
           <Layout>
-            <Header>
-              <Button
-                type="text"
-                icon={collapsed ? <ChevronsRight /> : <ChevronsLeft />}
-                onClick={() => setCollapsed(!collapsed)}
-                style={{
-                  fontSize: "16px",
-                  width: 44,
-                  height: 44,
-                }}
-              />
-            </Header>
+            {!isProtectedRoute && (
+              <Header>
+                <Button
+                  type="text"
+                  icon={collapsed ? <ChevronsRight /> : <ChevronsLeft />}
+                  onClick={() => setCollapsed(!collapsed)}
+                  style={{
+                    fontSize: "16px",
+                    width: 44,
+                    height: 44,
+                  }}
+                />
+              </Header>
+            )}
             <Content className="text-foreground">{children}</Content>
           </Layout>
         </Layout>

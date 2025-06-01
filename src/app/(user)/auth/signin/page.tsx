@@ -5,98 +5,125 @@ import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { jwtDecode } from "jwt-decode";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "@/redux/actions/user-action";
 import { useLogin } from "@/app/hooks/use-login";
 import { useGoogleLogin } from "@/app/hooks/use-google";
 import { GoogleCredentialResponse } from "@/app/dto/auth.dto";
-import { notify, notifyError } from "@/app/util/errorHandler";
+import Form from "antd/es/form/Form";
 
 const SignIn = () => {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
+  const [api, contextHolder] = notification.useNotification();
 
   const { mutate: login, isPending: isLoginPending } = useLogin();
   const { mutate: googleLogin, isPending: isGooglePending } = useGoogleLogin();
 
   const handleLogin = () => {
+    if (!email || !password) {
+      api.error({
+        message: "Validation Error",
+        description: "Please enter both email and password.",
+        duration: 3,
+      });
+      return;
+    }
+
     login(
       { email: email.toLowerCase(), password },
       {
         onSuccess: (data) => {
-          const decoded = jwtDecode(data.accessToken);
-          console.log("====================================");
-          console.log(data);
-          notifyError({
-            type: "ValidationError",
-            message: "Error",
-            description: "Please fix the validation errors.",
+          console.log(data, email, password);
+
+          if (!data.success) {
+            api.error({
+              message: "Login Error",
+              description: "Invalid credentials. Please try again.",
+              duration: 3,
+            });
+            return;
+          }
+          api.success({
+            type: "success",
+            message: "Login successful",
+            duration: 3,
           });
-          console.log("====================================");
           const token = data.accessToken;
           const decoded = jwtDecode(token);
           dispatch(loginSuccess(decoded));
-          Cookies.set("token", token, {
+          Cookies.set("token", token.toString(), {
             expires: 1,
             sameSite: "strict",
             secure: true,
           });
-          // router.push("/");
+          router.push("/");
         },
         onError: (error) => {
-          console.error("Login Error:", error);
-          notifyError({
-            type: "ValidationError",
-            message: "Error",
-            description: "Please fix the validation errors.",
+          api.error({
+            message: "Login Error",
+            description: error?.message || "An unexpected error occurred.",
           });
         },
       }
     );
   };
 
-  const handleGoogleSuccess = (
-    credentialResponse: GoogleCredentialResponse
-  ) => {
+  const handleGoogleSuccess = (credentialResponse: CredentialResponse) => {
+    const googleCredentialResponse =
+      credentialResponse as GoogleCredentialResponse;
+    const token = googleCredentialResponse?.credential;
+    if (!token) {
+      handleGoogleError();
+      return;
+    }
     googleLogin(
-      { credential: credentialResponse.credential },
+      { credential: googleCredentialResponse?.credential },
       {
         onSuccess: (response) => {
-          Cookies.set("token", response.token, {
+          const decoded = jwtDecode(response.accessToken);
+          console.log(decoded);
+
+          dispatch(loginSuccess(decoded));
+          Cookies.set("token", response.accessToken, {
             expires: 1,
             secure: true,
             sameSite: "Strict",
           });
-          notify({
+          api.success({
             type: "success",
-            title: "Success",
-            description: "Login successful",
+            style: {
+              background: "green",
+              color: "white",
+              accentColor: "white",
+            },
+            message: "Google Login successful",
           });
-          router.push("/dashboard");
+          router.push("/");
         },
         onError: (error) => {
           console.error("Google Sign-in Error:", error);
-          notifyError({
-            type: "UnauthorizedError",
-            message: "Error",
-            description: "Please try again.",
-          });
         },
       }
     );
   };
 
   const handleGoogleError = () => {
-    console.error("Google Login Failed");
+    api.error({
+      type: "error",
+      message: "Google Sign-in Error",
+      description: "Please try again.",
+    });
   };
 
   return (
     <>
-      <div className="grid items-center justify-center h-screen w-full font-[var(--font-gantari)]">
+      {contextHolder}
+      <div className=" items-center justify-center h-screen w-full font-[var(--font-gantari)]">
         <div className="lg:grid lg:grid-cols-2 xl:grid xl:grid-cols-3 w-full">
           {/* Branding Section */}
           <div className="hidden lg:flex h-screen items-center justify-center xl:col-span-2 bg-gradient-to-r">
@@ -111,7 +138,7 @@ const SignIn = () => {
             <Card className="w-[400px] space-y-6 p-4">
               <h1 className="text-4xl font-bold">Sign In</h1>
 
-              <form className="space-y-4">
+              <Form className="space-y-4">
                 <div>
                   <label htmlFor="email" className="block font-medium">
                     Email
@@ -140,7 +167,7 @@ const SignIn = () => {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-              </form>
+              </Form>
 
               <div className="flex justify-between text-sm">
                 <span>
@@ -168,9 +195,19 @@ const SignIn = () => {
 
               <div className="flex justify-center">
                 <GoogleLogin
-                  onSuccess={handleGoogleSuccess}
-                  onError={handleGoogleError}
-                  useOneTap
+                  onSuccess={(credentialResponse) => {
+                    console.log(
+                      "Login Success (Test Page):",
+                      credentialResponse
+                    );
+                    handleGoogleSuccess(credentialResponse);
+                  }}
+                  onError={() => {
+                    console.error("Login Error (Test Page)");
+                    alert("Login Failed! Check console.");
+                  }}
+                  // Try with and without useOneTap here
+                  // useOneTap
                 />
               </div>
             </Card>

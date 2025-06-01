@@ -59,12 +59,13 @@ const userApi = {
     }
   },
 
-  google_signin: (tokenResponse: any) => {
+  google_signin: (tokenResponse: string) => {
+    console.log(tokenResponse);
     try {
       const response = axios.post(
         (process.env.NEXT_PUBLIC_API_URL as string) + "user/google-signin",
         {
-          token: tokenResponse.credential,
+          token: tokenResponse,
         }
       );
       return response;

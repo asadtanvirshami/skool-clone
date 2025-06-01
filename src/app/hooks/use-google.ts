@@ -1,4 +1,3 @@
-
 import { useMutation } from "@tanstack/react-query";
 import { userApi } from "@/api/user/user-api";
 import { AxiosError } from "axios";
@@ -9,7 +8,7 @@ interface GoogleCredentialResponse {
 
 interface GoogleLoginResponse {
   success: boolean;
-  token: string;
+  accessToken: string;
 }
 
 export const useGoogleLogin = () =>

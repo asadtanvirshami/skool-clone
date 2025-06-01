@@ -14,5 +14,5 @@ export interface GoogleCredentialResponse {
 }
 export interface GoogleLoginResponse {
   success: boolean;
-  token: string;
+  accessToken: string;
 }

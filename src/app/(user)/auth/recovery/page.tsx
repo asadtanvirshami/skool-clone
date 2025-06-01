@@ -1,25 +1,15 @@
 "use client";
 import React from "react";
-import {
-  Button,
-  Flex,
-  Card,
-  Typography,
-  Input,
-  notification,
-  Form,
-} from "antd";
-import type { GetProps } from "antd";
+import { Button, Card, Input, notification, Form } from "antd";
 import { useRouter } from "next/navigation";
 import { userApi } from "@/api/user/user-api";
-const { Title } = Typography;
 
 const SignIn = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const router = useRouter();
   const [api, contextHolder] = notification.useNotification();
 
-  const onFinish = async (values: any) => {
+  const onFinish = async (values: { email: string }) => {
     console.log("hit");
 
     setIsLoading(true);
@@ -90,8 +80,12 @@ const SignIn = () => {
           <div className="flex h-screen align-middle justify-center font-[family-name:var(--font-gantari)] items-center border-silver-500 shadow-lg">
             <Card className="justify-center align-middle space-y-4 ">
               <div>
-                <h1 className="text-3xl font-bold font-[family-name:var(--font-gantari)]">Account Recovery</h1>
-                <p className="font-[family-name:var(--font-gantari)]">Please enter your email address to recover your account.</p>
+                <h1 className="text-3xl font-bold font-[family-name:var(--font-gantari)]">
+                  Account Recovery
+                </h1>
+                <p className="font-[family-name:var(--font-gantari)]">
+                  Please enter your email address to recover your account.
+                </p>
               </div>
               <Form name="login" onFinish={onFinish}>
                 <div className="mt-8">

@@ -101,3 +101,139 @@ body {
   white-space: nowrap;
   scroll-snap-type: x mandatory;
 }
+
+/* input.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #000000;
+  --components: #2b2a2a;
+  --muted: #2b2a2a;
+  --accent: #eceff4;
+}
+
+/* Ensure all text elements inherit the correct color */
+[data-theme="dark"] {
+  --background: #181818;
+  --foreground: #ffffff;
+  --muted: #b3b3b3;
+  --components: #2b2a2a;
+  --accent: #333333;
+}
+
+[data-theme="light"] {
+  --background: #ffffff;
+  --foreground: #000000;
+  --components: #ffff;
+  --muted: #2b2a2a;
+  --accent: #eceff4;
+}
+
+/* Sider Navlinks light & dark theme  */
+.ant-menu-item {
+  font-family: var(--font-gantari);
+}
+[data-theme="light"] .ant-menu-item:hover {
+  background-color: #2b2a2a !important;
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-title-content:hover {
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-title-content:active {
+  color: white !important;
+}
+[data-theme="light"] .ant-menu-item-selected span {
+  background-color: none !important;
+  color: white !important;
+  font-family: var(--font-gantari);
+}
+[data-theme="dark"] .ant-menu-item-selected span {
+  background-color: none !important;
+  color: white !important;
+  font-family: var(--font-gantari);
+}
+.ant-menu-item:active {
+  background-color: none !important;
+  color: white !important;
+}
+.ant-menu-item:focus {
+  background-color: none !important;
+  color: white !important;
+}
+
+.trasparent-bg-card {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 20px !important;
+  border-radius: 15px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+  color: white !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
+  color: var(--foreground);
+}
+
+html {
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Prevent vertical scrolling */
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+  font-family: var(--font-gantari);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow-x: auto;
+  overflow-y: hidden;
+  /* Prevent vertical scrolling */
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+}
+
+/* Base Notification Styles */
+.ant-notification-notice {
+  color: #ffffff !important;
+  font-family: var(--font-gantari);
+}
+
+/* Info (default) */
+.ant-notification-notice-info {
+  background-color: #2b2a2a !important;
+}
+
+/* Success */
+.ant-notification-notice-success {
+  background-color: #28a745 !important; /* green */
+}
+
+/* Error */
+.ant-notification-notice-error {
+  background-color: #dc3545 !important; /* red */
+}
+
+/* Warning */
+.ant-notification-notice-warning {
+  background-color: #fd7e14 !important; /* orange */
+}
+
+/* Optional: Ensure text inside messages is always white */
+.ant-notification-notice-message,
+.ant-notification-notice-description {
+  color: #ffffff !important;
+}
